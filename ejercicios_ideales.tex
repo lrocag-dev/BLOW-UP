@@ -1,0 +1,281 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\IfFileExists{lmodern.sty}{\usepackage{lmodern}}{}
+\IfFileExists{spanish.ldf}{\usepackage[spanish,es-noshorthands]{babel}}{}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{enumitem}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{booktabs}
+\usepackage[colorlinks=true,linkcolor=blue!50!black,urlcolor=blue!50!black]{hyperref}
+\setlength{\parskip}{3pt}
+\linespread{1.04}
+
+\newcommand{\Spec}{\operatorname{Spec}}
+\newcommand{\Frac}{\operatorname{Frac}}
+\newcommand{\nil}{\operatorname{nil}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\QQ}{\mathbb{Q}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\FF}{\mathbb{F}}
+\newcommand{\gen}[1]{\langle #1\rangle}
+\newcommand{\mm}{\mathfrak{m}}
+
+\theoremstyle{definition}
+\newtheorem*{teoria}{Recordatorio}
+\newcounter{ej}
+\newenvironment{ejercicio}[1]{\refstepcounter{ej}\par\bigskip\noindent\textbf{Ejercicio \theej.} \emph{(#1)}\ }{\par}
+\newenvironment{solucion}{\par\smallskip\noindent\textit{Solución.}\ }{\hfill$\square$\par}
+
+\title{\textbf{Veinte ejercicios resueltos sobre ideales}\\[4pt]
+\large Ideales, primos, maximales, principales, generados, radicales, cocientes y cuerpo de fracciones}
+\author{}
+\date{Octubre de 2026}
+
+\begin{document}
+\maketitle
+
+\paragraph{Convenciones.} Los anillos son conmutativos con unidad; $k$ es un cuerpo. Un ideal propio es un ideal $\ne A$. Usamos sin demostrar los siguientes hechos básicos:
+\begin{itemize}[itemsep=1pt]
+\item $I$ es primo $\iff A/I$ es un dominio; $I$ es maximal $\iff A/I$ es un cuerpo (en particular, maximal $\Rightarrow$ primo).
+\item $\gen S$ es el conjunto de combinaciones $A$-lineales finitas de elementos de $S$.
+\item $\sqrt I=\{a: a^n\in I\text{ para algún }n\}$; todo primo es radical; una intersección de ideales radicales es radical.
+\item Primer teorema de isomorfismo: si $\varphi:A\to B$ es sobreyectivo, $A/\ker\varphi\cong B$.
+\item $\Frac(A)$, para un dominio $A$, es el cuerpo de fracciones $a/b$ ($b\neq0$).
+\end{itemize}
+
+\bigskip
+\noindent\textbf{Índice temático.}
+\begin{center}
+\begin{tabular}{@{}ll@{}}
+\toprule
+Tema & Ejercicios \\
+\midrule
+Ideales y ejemplos/contraejemplos & 1, 3 \\
+Ideal generado y principal & 1, 2, 11 \\
+Anillos cociente & 4, 5, 13, 14 \\
+Ideales primos y maximales & 6, 7, 8, 12, 15, 20 \\
+Radical y nilradical & 5, 8, 9, 10, 11 \\
+Cuerpo de fracciones & 16, 17, 18, 19 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section*{Ejercicios}
+
+\begin{ejercicio}{Ideal definido por una condición; generadores}
+Sea $I=\{f\in\ZZ[x]: f(0)\text{ es par}\}$. Pruebe que $I$ es un ideal, que $I=\gen{2,x}$ y que es maximal.
+\end{ejercicio}
+\begin{solucion}
+Sea $\varphi:\ZZ[x]\to\ZZ/2$ la composición de la evaluación en $0$ con la reducción módulo $2$. Es un homomorfismo sobreyectivo, y $I=\ker\varphi$, luego $I$ es un ideal.
+
+Todo $f\in\ZZ[x]$ se escribe $f=f(0)+xg$ con $g\in\ZZ[x]$. Si $f\in I$, $f(0)=2m$ y $f=2m+xg\in\gen{2,x}$. Recíprocamente $2$ y $x$ están en $I$ y $I$ es ideal, así que $\gen{2,x}\subseteq I$.
+
+Por el primer teorema de isomorfismo $\ZZ[x]/I\cong\ZZ/2=\FF_2$, que es un cuerpo; por tanto $I$ es maximal.
+\end{solucion}
+
+\begin{ejercicio}{Ideal generado en $\ZZ$ y en $\QQ[x]$}
+Calcule un generador de $\gen{12,18,30}\subset\ZZ$ y de $\gen{x^2-1,\,x^3-1}\subset\QQ[x]$.
+\end{ejercicio}
+\begin{solucion}
+En un DIP, $\gen{a,b,\dots}=(\gcd)$. $\gcd(12,18,30)=6$: en efecto $6=18-12$ está en el ideal y $12,18,30$ son múltiplos de $6$. Luego $\gen{12,18,30}=(6)$.
+
+En $\QQ[x]$, $x^2-1=(x-1)(x+1)$ y $x^3-1=(x-1)(x^2+x+1)$; los cofactores $x+1$ y $x^2+x+1$ son coprimos (el segundo no se anula en $-1$: vale $1$). Luego $\gcd=x-1$, y explícitamente $x-1=(x^3-1)-x(x^2-1)$. Así $\gen{x^2-1,x^3-1}=(x-1)$.
+\end{solucion}
+
+\begin{ejercicio}{Operaciones con ideales; la unión no es ideal}
+En $\ZZ$ calcule $(12)+(18)$, $(12)\cap(18)$ y $(12)(18)$. Pruebe además que $(2)\cup(3)$ no es un ideal.
+\end{ejercicio}
+\begin{solucion}
+$(12)+(18)=(\gcd(12,18))=(6)$. $(12)\cap(18)=(\operatorname{mcm}(12,18))=(36)$. $(12)(18)=(216)$. Se tiene $(216)\subsetneq(36)$: el producto es en general más pequeño que la intersección.
+
+Para la unión: $2$ y $3$ pertenecen a $(2)\cup(3)$, pero $2+3=5$ no es múltiplo de $2$ ni de $3$. No es cerrado por sumas.
+\end{solucion}
+
+\begin{ejercicio}{Cociente que no es dominio; un primo que se factoriza}
+Sea $\ZZ[i]$ el anillo de enteros de Gauss. Pruebe que $(2)$ no es primo en $\ZZ[i]$, que $\ZZ[i]/(2)$ tiene $4$ elementos y que $\sqrt{(2)}=(1+i)$.
+\end{ejercicio}
+\begin{solucion}
+$(1+i)^2=2i=2\cdot i\in(2)$, pero $1+i\notin(2)$, pues $(1+i)/2\notin\ZZ[i]$. Luego $(2)$ no es primo.
+
+Todo $a+bi$ es congruente módulo $2$ a $a'+b'i$ con $a',b'\in\{0,1\}$, y estas cuatro clases son distintas (la diferencia de dos de ellas tiene partes real e imaginaria en $\{0,\pm1\}$, no ambas pares salvo que sean iguales). Así $|\ZZ[i]/(2)|=4$; no es un dominio (por lo anterior), luego no es el cuerpo $\FF_4$.
+
+Radical: $1+i\in\sqrt{(2)}$ porque $(1+i)^2\in(2)$, luego $(1+i)\subseteq\sqrt{(2)}$. Además $2=(1+i)(1-i)\in(1+i)$ y $\ZZ[i]/(1+i)\cong\FF_2$ (ver Ejercicio 20) es un cuerpo, luego $(1+i)$ es maximal; como $(2)\subseteq(1+i)$ y $\sqrt{(2)}$ es propio (no contiene $1$) y contiene al maximal $(1+i)$, se concluye $\sqrt{(2)}=(1+i)$.
+\end{solucion}
+
+\begin{ejercicio}{Ideales, primos y maximales de $\ZZ/36$}
+Describa todos los ideales de $\ZZ/36$, sus ideales primos y maximales, y el nilradical.
+\end{ejercicio}
+\begin{solucion}
+Por la correspondencia, los ideales de $\ZZ/36$ son los $(d)/(36)$ con $d\mid36$: $d\in\{1,2,3,4,6,9,12,18,36\}$, es decir $9$ ideales.
+
+Los primos de $\ZZ/36$ corresponden a primos de $\ZZ$ que contienen a $(36)$: $(2)$ y $(3)$; ambos son maximales (cocientes $\FF_2$ y $\FF_3$). El primo $(0)$ de $\ZZ$ no contiene a $(36)$.
+
+El nilradical es la intersección de los primos: $(2)\cap(3)=(6)$, es decir $(6)/(36)$, formado por $\{0,6,12,18,24,30\}$ (seis elementos). En efecto $6^2=36\equiv0$.
+\end{solucion}
+
+\begin{ejercicio}{Un primo no maximal en $k[x,y]$}
+Pruebe que $(x)\subset k[x,y]$ es primo y no es maximal, y halle un maximal que lo contiene.
+\end{ejercicio}
+\begin{solucion}
+El homomorfismo $k[x,y]\to k[y]$ que evalúa $x=0$ es sobreyectivo con núcleo $(x)$ (todo $f=f(0,y)+xg$). Así $k[x,y]/(x)\cong k[y]$, un dominio que no es cuerpo: $(x)$ es primo no maximal. Un maximal que lo contiene es $\gen{x,y}$, pues $(x)\subset\gen{x,y}$ y $k[x,y]/\gen{x,y}\cong k$ (Ejercicio 6).
+\end{solucion}
+
+\begin{ejercicio}{Ideales maximales de puntos}
+Pruebe que para $a,b\in k$ el ideal $\gen{x-a,\,y-b}\subset k[x,y]$ es maximal.
+\end{ejercicio}
+\begin{solucion}
+Sea $\mathrm{ev}:k[x,y]\to k$, $f\mapsto f(a,b)$; es sobreyectivo (constantes). Si $\mathrm{ev}(f)=0$, escribimos $f$ como polinomio en $x-a$ e $y-b$: $f=f(a,b)+(x-a)g+(y-b)h$, de modo que $f\in\gen{x-a,y-b}$. Recíprocamente $x-a,y-b\in\ker\mathrm{ev}$. Entonces $\ker\mathrm{ev}=\gen{x-a,y-b}$ y $k[x,y]/\gen{x-a,y-b}\cong k$ es un cuerpo.
+\end{solucion}
+
+\begin{ejercicio}{Radical que no es primo}
+Pruebe que $(xy)\subset k[x,y]$ es radical, no es primo, y que $k[x,y]/(xy)$ no es un dominio.
+\end{ejercicio}
+\begin{solucion}
+$x\cdot y\in(xy)$ pero $x,y\notin(xy)$ (no son múltiplos de $xy$): no es primo. En el cociente, $\bar x\bar y=0$ con $\bar x,\bar y\ne0$.
+
+Radical: sea $f^n\in(xy)$. Entonces $x\mid f^n$; como $x$ es irreducible en el DFU $k[x,y]$, $x\mid f$. Análogamente $y\mid f$. Como $x$ e $y$ son no asociados e irreducibles, $xy\mid f$. Luego $f\in(xy)$.
+\end{solucion}
+
+\begin{ejercicio}{Cálculo de radicales}
+Calcule $\sqrt{(12)}$ en $\ZZ$, $\sqrt{(x^2y^3)}$ en $k[x,y]$ y $\sqrt{\gen{x^2,y}}$ en $k[x,y]$.
+\end{ejercicio}
+\begin{solucion}
+(a) $12=2^2\cdot3$. Si $a^n\in(12)$, entonces $2\mid a^n$ y $3\mid a^n$, luego $2\mid a$ y $3\mid a$, es decir $6\mid a$. Recíprocamente $6^2=36\in(12)$. Así $\sqrt{(12)}=(6)$.
+
+(b) Si $f^n\in(x^2y^3)$, entonces $x\mid f$ y $y\mid f$, luego $xy\mid f$. Recíprocamente $(xy)^3=x^3y^3\in(x^2y^3)$. Así $\sqrt{(x^2y^3)}=(xy)$.
+
+(c) $x^2\in\gen{x^2,y}$ da $x\in\sqrt{\gen{x^2,y}}$, y $y$ está en el ideal; luego $\gen{x,y}\subseteq\sqrt{\gen{x^2,y}}$. Como $\gen{x,y}$ es primo y contiene a $\gen{x^2,y}$, también $\sqrt{\gen{x^2,y}}\subseteq\gen{x,y}$. Por tanto $\sqrt{\gen{x^2,y}}=\gen{x,y}$.
+\end{solucion}
+
+\begin{ejercicio}{Nilradical de $\ZZ/72$}
+Halle el nilradical de $\ZZ/72$, el índice de nilpotencia de su generador y el número de nilpotentes.
+\end{ejercicio}
+\begin{solucion}
+$72=2^3\cdot3^2$. Una clase $\bar a$ es nilpotente si $72\mid a^n$ para algún $n$, lo que ocurre si y sólo si $2\mid a$ y $3\mid a$, es decir $6\mid a$. Entonces $\nil(\ZZ/72)=(\bar6)$. Sus elementos son los múltiplos de $6$ módulo $72$: $72/6=12$ elementos. Para $\bar6$: $6^2=36\not\equiv0$ y $6^3=216=3\cdot72\equiv0$; el índice de nilpotencia es $3$.
+\end{solucion}
+
+\begin{ejercicio}{Ideal no principal; potencia de un maximal no radical}
+En $k[x,y]$ sea $\mm=\gen{x,y}$. Pruebe que $\mm$ no es principal y que $\mm^2=\gen{x^2,xy,y^2}$ no es radical.
+\end{ejercicio}
+\begin{solucion}
+Si $\mm=(h)$, entonces $h\mid x$ y $h\mid y$; los divisores de $x$ son constantes no nulas o $cx$, los de $y$ son constantes no nulas o $cy$, así que $h$ es constante no nula, una unidad, y $(h)=k[x,y]\ne\mm$ (porque $1\notin\mm$).
+
+$\mm^2$ está generado por los productos de pares de generadores: $x^2,xy,y^2$ (los generadores de $I^n$ son los productos de $n$ generadores de $I$). Se tiene $x\notin\mm^2$ (todos los elementos de $\mm^2$ tienen sólo monomios de grado $\ge2$), pero $x^2\in\mm^2$, luego $x\in\sqrt{\mm^2}\setminus\mm^2$. En realidad $\sqrt{\mm^2}=\mm$.
+\end{solucion}
+
+\begin{ejercicio}{Primos y maximales en $\ZZ[x]$}
+Clasifique $(2)$, $(x)$, $\gen{2,x}$ y $(x^2+1)$ en $\ZZ[x]$ como primos o maximales.
+\end{ejercicio}
+\begin{solucion}
+$\ZZ[x]/(2)\cong\FF_2[x]$: dominio, no cuerpo. $(2)$ primo no maximal.
+
+$\ZZ[x]/(x)\cong\ZZ$: dominio, no cuerpo. $(x)$ primo no maximal.
+
+$\ZZ[x]/\gen{2,x}\cong\FF_2$: cuerpo. $\gen{2,x}$ maximal.
+
+$\ZZ[x]/(x^2+1)\cong\ZZ[i]$ ($x\mapsto i$): dominio, no cuerpo ($2$ no es invertible). $(x^2+1)$ primo no maximal.
+
+Resumen de una cadena de primos: $(0)\subsetneq(x)\subsetneq\gen{2,x}$, de longitud $2$.
+\end{solucion}
+
+\begin{ejercicio}{El mismo polinomio, distintos cuerpos}
+Pruebe que $\RR[x]/(x^2+1)\cong\CC$ y que $\CC[x]/(x^2+1)\cong\CC\times\CC$. Deduzca si $(x^2+1)$ es primo/maximal en $\RR[x]$ y en $\CC[x]$.
+\end{ejercicio}
+\begin{solucion}
+$\RR[x]\to\CC$, $x\mapsto i$, es sobreyectivo (su imagen contiene $\RR$ e $i$), y su núcleo contiene a $x^2+1$. Como $x^2+1$ es irreducible en $\RR[x]$, $(x^2+1)$ es maximal y el núcleo, que es un ideal propio que contiene a un maximal, coincide con él. Luego $\RR[x]/(x^2+1)\cong\CC$, un cuerpo: $(x^2+1)$ es maximal (y primo) en $\RR[x]$.
+
+En $\CC[x]$, $x^2+1=(x-i)(x+i)$ con $(x-i)+(x+i)=\CC[x]$ (pues $2i$ es unidad). Por el teorema chino del resto, $\CC[x]/(x^2+1)\cong\CC[x]/(x-i)\times\CC[x]/(x+i)\cong\CC\times\CC$, que no es dominio: $(x^2+1)$ no es primo en $\CC[x]$.
+\end{solucion}
+
+\begin{ejercicio}{La parábola}
+Pruebe que $k[x,y]/(y-x^2)\cong k[t]$, que $(y-x^2)$ es primo no maximal, y describa los maximales que lo contienen.
+\end{ejercicio}
+\begin{solucion}
+Sea $\varphi:k[x,y]\to k[t]$ con $x\mapsto t$, $y\mapsto t^2$. Es sobreyectivo. $y-x^2\in\ker\varphi$. Dividiendo $g\in k[x,y]$ por el mónico (en $y$) $y-x^2$, $g=q\,(y-x^2)+r(x)$, y $\varphi(g)=r(t)$; si es cero, $r=0$ y $g\in(y-x^2)$. Así $\ker\varphi=(y-x^2)$ y el cociente es $k[t]$.
+
+Es un dominio no cuerpo: primo no maximal. Los maximales de $k[x,y]$ que contienen a $(y-x^2)$ corresponden a los maximales de $k[t]$; para $k$ algebraicamente cerrado son $(t-a)$, que corresponden a $\gen{x-a,\,y-a^2}$ (los puntos de la parábola).
+\end{solucion}
+
+\begin{ejercicio}{Ideales de un producto de cuerpos}
+Halle todos los ideales de $k\times k$, sus primos y maximales.
+\end{ejercicio}
+\begin{solucion}
+Sea $I$ un ideal. Si $(a,b)\in I$, entonces $(a,0)=(1,0)(a,b)\in I$ y $(0,b)=(0,1)(a,b)\in I$. Así $I=I_1\times I_2$ con $I_j\subseteq k$ ideal; como $k$ es cuerpo, $I_j\in\{0,k\}$. Hay exactamente cuatro ideales: $0$, $k\times0$, $0\times k$ y $k\times k$.
+
+$(k\times k)/(k\times0)\cong k$ y $(k\times k)/(0\times k)\cong k$ son cuerpos: ambos ideales son maximales (y primos). $(0)$ no es primo: $(1,0)(0,1)=0$. Hay, pues, dos primos, ambos maximales: $\Spec(k\times k)$ consta de dos puntos cerrados.
+\end{solucion}
+
+\begin{ejercicio}{Cuerpo de fracciones de $\ZZ[i]$}
+Pruebe que $\Frac(\ZZ[i])=\QQ(i)=\{a+bi:a,b\in\QQ\}$.
+\end{ejercicio}
+\begin{solucion}
+$\QQ(i)=\{a+bi: a,b\in\QQ\}$ es un cuerpo (el inverso de $a+bi\ne0$ es $(a-bi)/(a^2+b^2)$) que contiene a $\ZZ[i]$. Por la propiedad universal, $\Frac(\ZZ[i])$ se identifica con el subcuerpo de $\QQ(i)$ generado por $\ZZ[i]$.
+
+Todo $a+bi\in\QQ(i)$ con $a=p/n$, $b=q/n$ (denominador común $n>0$) es $(p+qi)/n$, cociente de elementos de $\ZZ[i]$. Luego el subcuerpo generado es todo $\QQ(i)$.
+\end{solucion}
+
+\begin{ejercicio}{Cuerpo de fracciones de $\ZZ[\sqrt2]$}
+Pruebe que $\Frac(\ZZ[\sqrt2])=\QQ(\sqrt2)$ y que $\ZZ[\sqrt2]$ no es un cuerpo.
+\end{ejercicio}
+\begin{solucion}
+$\ZZ[\sqrt2]=\{a+b\sqrt2:a,b\in\ZZ\}$ es un subanillo de $\RR$, luego un dominio. $\QQ(\sqrt2)=\{a+b\sqrt2:a,b\in\QQ\}$ es un cuerpo: si $(a,b)\ne(0,0)$, $a^2-2b^2\ne0$ (pues $\sqrt2$ es irracional) y $(a+b\sqrt2)^{-1}=(a-b\sqrt2)/(a^2-2b^2)$. Como en el ejercicio anterior, poniendo denominador común, todo elemento de $\QQ(\sqrt2)$ es $(p+q\sqrt2)/n$ con $p,q,n\in\ZZ$: cociente de elementos de $\ZZ[\sqrt2]$. Así $\Frac(\ZZ[\sqrt2])=\QQ(\sqrt2)$.
+
+$\ZZ[\sqrt2]$ no es cuerpo: $2$ no es invertible, pues $1/2=\tfrac12+0\sqrt2\notin\ZZ[\sqrt2]$.
+\end{solucion}
+
+\begin{ejercicio}{Un anillo y su normalización tienen el mismo cuerpo de fracciones}
+Sea $A=k[t^2,t^3]\subset k[t]$. Pruebe que $A\ne k[t]$ y que $\Frac(A)=k(t)$.
+\end{ejercicio}
+\begin{solucion}
+Los elementos de $A$ son los polinomios sin término en $t$ (sus monomios son $1,t^2,t^3,t^4,\dots$), así que $t\notin A$ y $A\subsetneq k[t]$. Pero $t=t^3/t^2\in\Frac(A)$ y $k\subset A$, de modo que $k[t]\subseteq\Frac(A)\subseteq k(t)$, y por minimalidad $\Frac(A)=k(t)$.
+
+Recuérdese que $A\cong k[x,y]/(y^2-x^3)$ (cúspide), y el cociente $y/x\mapsto t$ muestra que la cúspide es \emph{birracional} a $\mathbb A^1$: esta es la idea de la resolución por blow-up.
+\end{solucion}
+
+\begin{ejercicio}{Cuerpos de fracciones de cocientes de $\ZZ[x]$}
+Calcule $\Frac(\ZZ[x]/(2))$ y $\Frac(\ZZ[x]/(x))$.
+\end{ejercicio}
+\begin{solucion}
+$\ZZ[x]/(2)\cong\FF_2[x]$ es un dominio, con cuerpo de fracciones $\FF_2(x)$ (funciones racionales sobre $\FF_2$, un cuerpo infinito de característica $2$).
+
+$\ZZ[x]/(x)\cong\ZZ$ (evaluación en $0$), con cuerpo de fracciones $\QQ$ (de característica $0$).
+
+En general, para un primo $\mathfrak p$ de $A$, $\Frac(A/\mathfrak p)$ es el \emph{cuerpo residual} $\kappa(\mathfrak p)$ del punto $\mathfrak p\in\Spec A$. Aquí los dos primos $(2)$ y $(x)$ de $\ZZ[x]$ tienen cuerpos residuales de característica distinta.
+\end{solucion}
+
+\begin{ejercicio}{Contracción de un maximal}
+Sea $\varphi:\ZZ\hookrightarrow\ZZ[i]$ la inclusión. Pruebe que $\ZZ[i]/(1+i)\cong\FF_2$ y calcule $\varphi^{-1}((1+i))$. Pruebe también que $\varphi^{-1}((3))=(3)$.
+\end{ejercicio}
+\begin{solucion}
+$\ZZ[i]\cong\ZZ[x]/(x^2+1)$, luego $\ZZ[i]/(1+i)\cong\ZZ[x]/(x^2+1,\,x+1)$. En este cociente $x=-1$, así que $x^2+1=2$, y queda $\ZZ/(2)=\FF_2$. Es un cuerpo: $(1+i)$ es maximal.
+
+La composición $\ZZ\to\ZZ[i]\to\ZZ[i]/(1+i)\cong\FF_2$ es la reducción módulo $2$ (envía $1\mapsto1$), cuyo núcleo es $(2)$. Entonces $\varphi^{-1}((1+i))=(2)$, y en particular es maximal en $\ZZ$.
+
+Para $(3)$: $\ZZ[i]/(3)\cong\FF_3[x]/(x^2+1)$. El polinomio $x^2+1$ no tiene raíces en $\FF_3$ ($0,1,2\mapsto1,2,2$), luego es irreducible y el cociente es un cuerpo de $9$ elementos: $(3)$ es maximal en $\ZZ[i]$. Su contracción es $(3)\cap\ZZ=(3)$: contiene a $3$ y es propia ($1\notin(3)$), y $(3)$ es maximal en $\ZZ$.
+\end{solucion}
+
+\section*{Cuadro resumen}
+
+\begin{center}
+\small
+\begin{tabular}{@{}llccc@{}}
+\toprule
+Ideal & Anillo & Primo & Maximal & Radical \\
+\midrule
+$\gen{2,x}$ & $\ZZ[x]$ & sí & sí & sí \\
+$(x)$ & $k[x,y]$ & sí & no & sí \\
+$(xy)$ & $k[x,y]$ & no & no & sí \\
+$\gen{x^2,y}$, $\mm^2$ & $k[x,y]$ & no & no & no \\
+$(y-x^2)$ & $k[x,y]$ & sí & no & sí \\
+$(2)$ & $\ZZ[i]$ & no & no & no \\
+$(1+i)$ & $\ZZ[i]$ & sí & sí & sí \\
+$(x^2+1)$ & $\RR[x]$ & sí & sí & sí \\
+$(x^2+1)$ & $\CC[x]$ & no & no & sí \\
+$(0)$ & $k\times k$ & no & no & sí \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\end{document}

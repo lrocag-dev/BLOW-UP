@@ -1,0 +1,657 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\IfFileExists{lmodern.sty}{\usepackage{lmodern}}{}
+\IfFileExists{spanish.ldf}{\usepackage[spanish,es-noshorthands]{babel}}{}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{enumitem}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{tikz-cd}
+\usepackage{booktabs}
+\usepackage[colorlinks=true,linkcolor=blue!50!black,urlcolor=blue!50!black]{hyperref}
+
+% ---------- Macros ----------
+\newcommand{\Spec}{\operatorname{Spec}}
+\newcommand{\Proj}{\operatorname{Proj}}
+\newcommand{\Bl}{\operatorname{Bl}}
+\newcommand{\gr}{\operatorname{gr}}
+\newcommand{\Pic}{\operatorname{Pic}}
+\newcommand{\mult}{\operatorname{mult}}
+\newcommand{\A}{\mathbb{A}}
+\newcommand{\PP}{\mathbb{P}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\cO}{\mathcal{O}}
+\newcommand{\Frac}{\operatorname{Frac}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\tr}{\operatorname{tr}}
+
+% ---------- Entornos ----------
+\theoremstyle{plain}
+\newtheorem{teorema}{Teorema}[section]
+\newtheorem{proposicion}[teorema]{Proposición}
+\newtheorem{corolario}[teorema]{Corolario}
+\theoremstyle{definition}
+\newtheorem{definicion}[teorema]{Definición}
+\newtheorem{ejemplo}[teorema]{Ejemplo}
+\theoremstyle{remark}
+\newtheorem{observacion}[teorema]{Observación}
+\newtheorem*{convencion}{Convención}
+
+\newcounter{ejer}
+\newenvironment{ejercicio}[1][]{\refstepcounter{ejer}\par\medskip\noindent\textbf{Ejercicio \theejer}\ifx&#1&\else\ (#1)\fi.\ }{\par}
+
+\title{\textbf{Blow-ups, blow-downs y resolución de singularidades}\\[2pt]
+\large Clase de dos horas: anillos graduados y morfismos de esquemas}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section*{Plan de la clase}
+
+\begin{center}
+\begin{tabular}{@{}rll@{}}
+\toprule
+Minutos & Bloque & Contenido \\
+\midrule
+0--10 & \S1 & Repaso: anillos graduados, $\Proj$, morfismos \\
+10--35 & \S2 & Álgebra de Rees, blow-up, propiedad universal \\
+35--55 & \S3 & Ejemplos: $\Bl_0\A^2$, $\Bl_0\A^n$, centro no reducido \\
+55--65 & & \emph{Descanso} \\
+65--80 & \S4 & Transformada estricta; nodo y cúspide \\
+80--95 & \S5 & Blow-down y criterio de Castelnuovo \\
+95--110 & \S6 & Resolución de singularidades; Hironaka; $A_1$ \\
+110--120 & \S7 & Ejercicios en clase y cierre \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent El \S\ref{sec:dinamica} es material complementario (fuera de las dos horas): conecta la clase con los sistemas dinámicos polinomiales y trabaja un sistema concreto de ecuaciones diferenciales.
+
+\begin{convencion}
+$k$ es un cuerpo algebraicamente cerrado. Salvo que se indique otra cosa, $A$ es un anillo noetheriano \emph{íntegro}, $X=\Spec A$ e $I\subset A$ es un ideal no nulo. Todos los esquemas son noetherianos y de tipo finito sobre $k$ cuando se habla de geometría. La parte de esquemas se usa sólo a nivel de Proj/Spec y morfismos, que es el que se recuerda en \S1.
+\end{convencion}
+
+\paragraph{Objetivos.} Al terminar la clase el estudiante sabrá: (i) construir el blow-up de un esquema como $\Proj$ del álgebra de Rees, (ii) calcular sus cartas afines y el divisor excepcional, (iii) enunciar y usar la propiedad universal, (iv) calcular transformadas estrictas de curvas, (v) enunciar el criterio de Castelnuovo para el blow-down, y (vi) resolver explícitamente singularidades de curvas planas y de la superficie $A_1$, enunciando el teorema de Hironaka.
+
+% =====================================================
+\section{Preliminares (10 min)}
+
+\subsection{Anillos graduados y Proj}
+
+\begin{definicion}
+Un \emph{anillo graduado} es un anillo $S=\bigoplus_{d\ge 0}S_d$ con $S_dS_e\subset S_{d+e}$. Sea $S_+=\bigoplus_{d>0}S_d$. Un \emph{homomorfismo graduado} $\varphi\colon S\to T$ es un homomorfismo de anillos con $\varphi(S_d)\subset T_d$ para todo $d$.
+\end{definicion}
+
+\begin{definicion}
+$\Proj S$ es el conjunto de ideales primos \emph{homogéneos} $\mathfrak p\subset S$ con $S_+\not\subset\mathfrak p$, con la topología de Zariski y el haz de estructura determinado por los abiertos básicos
+\[
+D_+(f)=\{\mathfrak p : f\notin\mathfrak p\}\;\cong\;\Spec\,(S_f)_0,\qquad f \text{ homogéneo de grado}>0,
+\]
+donde $(S_f)_0$ es la parte de grado $0$ de la localización $S_f$.
+\end{definicion}
+
+\begin{ejemplo}\label{ej:Pn}
+Si $S=A[T_0,\dots,T_n]$ con $\deg T_i=1$, entonces $\Proj S=\PP^n_A$ y $D_+(T_i)=\Spec A[T_0/T_i,\dots,T_n/T_i]\cong\A^n_A$.
+\end{ejemplo}
+
+\subsection{Morfismos de esquemas y homomorfismos de anillos}
+
+Un morfismo de esquemas es un par $(f,f^\#)$ con $f$ continua y $f^\#\colon\cO_Y\to f_*\cO_X$ tal que los homomorfismos inducidos en anillos locales son locales. Lo que necesitamos es lo siguiente.
+
+\begin{proposicion}\label{prop:homo-morf}
+\begin{enumerate}[label=(\alph*)]
+\item $\operatorname{Hom}_{\mathrm{Esq}}(\Spec B,\Spec A)=\operatorname{Hom}_{\mathrm{Anillos}}(A,B)$: los morfismos entre esquemas afines \emph{son} homomorfismos de anillos (en sentido contrario).
+\item Sea $\varphi\colon S\to T$ un homomorfismo graduado y $U=\Proj T\setminus V(\varphi(S_+)T)$. Entonces $\mathfrak q\mapsto\varphi^{-1}(\mathfrak q)$ define un morfismo de esquemas $U\to\Proj S$. Si $\varphi$ es sobreyectivo, $U=\Proj T$ y el morfismo es una inmersión cerrada.
+\item Si $S$ es una $A$-álgebra graduada (es decir, hay un homomorfismo $A\to S_0$), se obtiene un morfismo estructural $\Proj S\to\Spec A$.
+\end{enumerate}
+\end{proposicion}
+
+\begin{ejemplo}
+El homomorfismo graduado sobreyectivo $k[T_0,T_1,T_2]\to k[T_0,T_1,T_2]/(T_0T_1-T_2^2)$ induce la inmersión cerrada de la cónica $Q=V(T_0T_1-T_2^2)$ en $\PP^2$. Además $Q\cong\PP^1$ vía $[s:t]\mapsto[s^2:t^2:st]$; este isomorfismo es la inmersión de Veronese y proviene de un homomorfismo de los anillos graduados $k[T_0,T_1,T_2]/(T_0T_1-T_2^2)\to k[s,t]^{(2)}=\bigoplus_d k[s,t]_{2d}$ (subanillo de grados pares, con $\deg$ dividido por $2$), que es un isomorfismo.
+\end{ejemplo}
+
+% =====================================================
+\section{El blow-up como Proj del álgebra de Rees (25 min)}
+
+\begin{definicion}[Álgebras de Rees y graduada asociada]
+Sea $I\subset A$ un ideal. El \emph{álgebra de Rees} de $I$ es
+\[
+R(I)=\bigoplus_{n\ge0}I^n t^n=A[It]\subset A[t],
+\]
+graduada por $\deg(at^n)=n$ (el grado $0$ es $A$). El \emph{anillo graduado asociado} es
+\[
+\gr_I(A)=\bigoplus_{n\ge0}I^n/I^{n+1}.
+\]
+\end{definicion}
+
+\begin{definicion}[Blow-up]
+El \emph{blow-up} de $X=\Spec A$ a lo largo de $I$ es
+\[
+\Bl_I X:=\Proj R(I)\xrightarrow{\ \pi\ }\Spec A=X,
+\]
+donde $\pi$ es el morfismo de la Proposición~\ref{prop:homo-morf}(c) asociado a $A=R(I)_0\hookrightarrow R(I)$: es un \emph{homomorfismo graduado}, que es exactamente la clase de objetos pedida. Para un esquema noetheriano $X$ y un haz de ideales coherente $\mathcal I$, se define $\Bl_{\mathcal I}X=\Proj\bigoplus_n\mathcal I^n$ pegando sobre abiertos afines. El \emph{divisor excepcional} es $E=\pi^{-1}(V(I))$ con la estructura de subesquema definida por $I\cdot\cO_{\Bl_IX}$.
+\end{definicion}
+
+\begin{proposicion}[Cartas]\label{prop:cartas}
+Sea $I=(f_1,\dots,f_r)$ con $f_i\neq 0$.
+\begin{enumerate}[label=(\alph*)]
+\item El homomorfismo graduado sobreyectivo $A[T_1,\dots,T_r]\to R(I)$, $T_i\mapsto f_it$, induce una inmersión cerrada $\Bl_IX\hookrightarrow\PP^{r-1}_A$.
+\item $\Bl_IX$ está cubierto por los abiertos $U_i=D_+(f_it)\cong\Spec A[I/f_i]$, donde
+\[
+A[I/f_i]=A\!\left[\tfrac{f_1}{f_i},\dots,\tfrac{f_r}{f_i}\right]\subset\Frac(A).
+\]
+\item En $U_i$ el ideal $I\cdot\cO_{U_i}$ es principal, generado por $f_i$, que no es divisor de cero.
+\end{enumerate}
+\end{proposicion}
+
+\begin{proof}
+(a) es la Proposición~\ref{prop:homo-morf}(b). (b) Un elemento de $(R(I)_{f_it})_0$ es de la forma $a\,t^n/(f_it)^n=a/f_i^n$ con $a\in I^n$; estos elementos generan precisamente $A[I/f_i]$. (c) $f_j=f_i\cdot(f_j/f_i)\in f_iA[I/f_i]$ para todo $j$, luego $IA[I/f_i]=(f_i)$; y $f_i\ne0$ en un dominio.
+\end{proof}
+
+\begin{teorema}[Propiedad universal]\label{teo:universal}
+\begin{enumerate}[label=(\roman*)]
+\item $I\cdot\cO_{\Bl_IX}$ es un haz de ideales invertible (es $\cO_{\Bl_IX}(1)$).
+\item Si $g\colon Z\to X$ es un morfismo de esquemas tal que $g^{-1}I\cdot\cO_Z$ es un haz de ideales invertible, entonces $g$ se factoriza de manera \emph{única} por $\pi$:
+\[
+\begin{tikzcd}
+ & \Bl_IX \arrow[d,"\pi"] \\
+ Z \arrow[r,"g"'] \arrow[ur,dashed,"\exists!\,\tilde g"] & X
+\end{tikzcd}
+\]
+\end{enumerate}
+\end{teorema}
+
+\begin{proof}[Esbozo]
+(i) es la Proposición~\ref{prop:cartas}(c). (ii) Localmente en $Z$, $g^{-1}I\cdot\cO_Z=(h)$ y $h$ coincide, salvo unidad, con $g^\#(f_i)$ para algún $i$. Se define $A[I/f_i]\to\cO_Z(W)$ por $f_j/f_i\mapsto g^\#(f_j)/g^\#(f_i)$, que tiene sentido porque $g^\#(f_i)$ genera el ideal y no es divisor de cero. Estos morfismos locales se pegan, y la unicidad sigue de que $\pi$ es separado y $\pi$ es un isomorfismo fuera de $E$, que es denso en $\Bl_IX$.
+\end{proof}
+
+\begin{corolario}
+Si $I=(f)$ es principal con $f$ no divisor de cero, $\pi\colon\Bl_IX\to X$ es un isomorfismo. (Es el Ejercicio~\ref{ej:principal}.)
+\end{corolario}
+
+\begin{proposicion}[Propiedades básicas]\label{prop:basicas}
+Sea $A$ íntegro e $I\ne0$.
+\begin{enumerate}[label=(\alph*)]
+\item $\pi$ es un isomorfismo sobre $X\setminus V(I)$.
+\item $\Bl_IX$ es íntegro, $\pi$ es propio (incluso proyectivo) y birracional.
+\item $E=\Proj\gr_I(A)$ como esquemas, pues $R(I)/I\,R(I)\cong\gr_I(A)$.
+\end{enumerate}
+\end{proposicion}
+
+\begin{proof}[Esbozo]
+(a) Si $0\neq f\in I$, sobre $D(f)$ se tiene $I_f=A_f$, luego $A_f[I_f/f]=A_f$. (b) $R(I)\subset A[t]$ es un dominio, $\Proj R(I)\hookrightarrow\PP^{r-1}_A$ es cerrado (Prop.~\ref{prop:cartas}(a)) y $\PP^{r-1}_A\to X$ es propio; birracional por (a). (c) $I\,R(I)=\bigoplus_n I^{n+1}t^n$, luego $R(I)/I\,R(I)=\bigoplus_nI^n/I^{n+1}$. (Ejercicio~\ref{ej:gr}.)
+\end{proof}
+
+\begin{observacion}
+El punto (c) conecta las dos álgebras graduadas: el homomorfismo graduado sobreyectivo $R(I)\to\gr_I(A)$ induce la inmersión cerrada $E\hookrightarrow\Bl_IX$ (Prop.~\ref{prop:homo-morf}(b)). Geométricamente $E$ es el \emph{cono normal proyectivizado} de $V(I)$ en $X$.
+\end{observacion}
+
+% =====================================================
+\section{Ejemplos (20 min)}
+
+\begin{ejemplo}[Blow-up del origen en $\A^2$]\label{ej:A2}
+Sea $A=k[x,y]$, $I=(x,y)$. Como $x,y$ es una sucesión regular, el núcleo de $A[T_1,T_2]\to R(I)$, $T_1\mapsto xt$, $T_2\mapsto yt$, está generado por la relación de Koszul $yT_1-xT_2$. Escribiendo $[u:v]$ para las coordenadas de $\PP^1$:
+\[
+\Bl_0\A^2=V(yT_1-xT_2)=\{\,((x,y),[u:v])\in\A^2\times\PP^1 : xv=yu\,\}.
+\]
+Es el conjunto de pares (punto, recta por el origen que lo contiene). Las cartas son:
+\begin{itemize}
+\item $U_1=\{u\neq0\}=\Spec k[x,s]$ con $s=y/x$, y $\pi(x,s)=(x,xs)$. Aquí $E\cap U_1=\{x=0\}$, una recta afín de coordenada $s$.
+\item $U_2=\{v\neq0\}=\Spec k[y,s']$ con $s'=x/y$, y $\pi(y,s')=(s'y,y)$. Aquí $E\cap U_2=\{y=0\}$.
+\end{itemize}
+En $U_1\cap U_2$ se cumple $ss'=1$. Ambas cartas son $\A^2$, luego $\Bl_0\A^2$ es \emph{lisa}, $\pi^{-1}(0)=E\cong\PP^1$ y $\pi$ es un isomorfismo fuera de $E$ (con inversa $(x,y)\mapsto(x,y/x)$ si $x\neq0$).
+\end{ejemplo}
+
+\begin{ejemplo}[Blow-up del origen en $\A^n$]
+Con $I=(x_1,\dots,x_n)$: $\Bl_0\A^n=\{x_iT_j=x_jT_i\}\subset\A^n\times\PP^{n-1}$. Cada carta $x_i\neq0$ es $\A^n$ con coordenadas $x_i$ y $x_j/x_i$ ($j\ne i$); por tanto es lisa, $E\cong\PP^{n-1}$ y $\Bl_0\A^n$ es el espacio total del fibrado tautológico $\cO_{\PP^{n-1}}(-1)$.
+\end{ejemplo}
+
+\begin{ejemplo}[Un centro no reducido crea singularidades]\label{ej:nored}
+Sea $I=(x^2,y)\subset A=k[x,y]$ (sucesión regular). Entonces $R(I)=A[T_1,T_2]/(yT_1-x^2T_2)$ y
+\begin{itemize}
+\item Carta $f_1=x^2$: $A[I/x^2]=k[x,w]$ con $w=y/x^2$ (pues $y=x^2w$): \emph{lisa}.
+\item Carta $f_2=y$: $A[I/y]=k[x,y,u]/(x^2-yu)$ con $u=x^2/y$: una superficie con una \emph{singularidad $A_1$} en $(0,0,0)$.
+\end{itemize}
+Conclusión: aun partiendo de una variedad lisa, el blow-up a lo largo de un centro no liso puede crear singularidades. Por eso el teorema de Hironaka exige centros lisos.
+\end{ejemplo}
+
+% =====================================================
+\section{Transformada estricta: curvas planas (15 min)}
+
+\begin{definicion}
+Sea $Y\subset X$ un subesquema cerrado. Su \emph{transformada estricta} es $\tilde Y=\overline{\pi^{-1}(Y\setminus V(I))}\subset\Bl_IX$. Equivale a $\Bl_{I\cdot\cO_Y}Y$.
+\end{definicion}
+
+\begin{proposicion}\label{prop:estricta}
+Sea $C=V(g)\subset\A^2$ con $g=g_m+g_{m+1}+\cdots$ ($g_d$ homogéneo de grado $d$, $g_m\ne0$), es decir $m=\mult_0C$. En la carta $U_1$ del Ejemplo~\ref{ej:A2}:
+\[
+g(x,xs)=x^m\,\tilde g(x,s),\qquad \tilde g(0,s)=g_m(1,s).
+\]
+Entonces $\tilde C\cap U_1=V(\tilde g)$, $\pi^*C=\tilde C+mE$ y $\tilde C\cap E$ son los puntos que corresponden a las direcciones tangentes de $C$ en $0$ (raíces de $g_m$), contadas con multiplicidad. En particular $\tilde C\cdot E=m$.
+\end{proposicion}
+
+\begin{ejemplo}[Nodo]\label{ej:nodo}
+$C\colon y^2=x^2(1+x)$, $m=2$. Con $y=xs$: $x^2s^2=x^2(1+x)$, es decir $\tilde C\colon s^2=1+x$. Es lisa, y $\tilde C\cap E=\{x=0,\ s=\pm1\}$: dos puntos distintos, cortando a $E$ transversalmente (las dos ramas del nodo tienen tangentes distintas). En la otra carta ($x=ys'$) se obtiene $1=s'^2+ys'^3$, que da los mismos dos puntos. \emph{Un blow-up resuelve el nodo}.
+\end{ejemplo}
+
+\begin{ejemplo}[Cúspide $y^2=x^3$]\label{ej:cuspide}
+$m=2$.
+\begin{enumerate}[label=\textbf{Paso \arabic*.},leftmargin=*,itemsep=2pt]
+\item $y=xs$: $x^2s^2=x^3\Rightarrow\tilde C_1\colon s^2=x$. Es lisa, pero \emph{tangente} a $E_1=\{x=0\}$ en $(0,0)$ (multiplicidad de intersección $2=m$). En la otra carta no hay puntos de $\tilde C$ sobre $E$ (la ecuación $1=y\,s'^3$ no se anula en $y=0$).
+\item Se explota el punto $(x,s)=(0,0)$ con $x=s\,x_2$: $s^2=sx_2\Rightarrow\tilde C_2\colon s=x_2$. Tres curvas lisas por el origen de $(s,x_2)$: $\tilde C_2\colon s=x_2$, la transformada estricta $\tilde E_1\colon x_2=0$ y el nuevo divisor $E_2\colon s=0$, dos a dos transversales pero \emph{concurrentes}.
+\item Un tercer blow-up en ese punto separa las tres curvas en tres puntos distintos de $E_3\cong\PP^1$.
+\end{enumerate}
+Con el primer blow-up la curva ya es lisa; los otros dos se necesitan para que la preimagen total sea un divisor de \emph{cruces normales simples}. $\qquad$ (Resolución \emph{encajada} frente a resolución de la curva.)
+\end{ejemplo}
+
+% =====================================================
+\section{Blow-down y criterio de Castelnuovo (15 min)}
+
+En esta sección $S$ es una superficie proyectiva lisa sobre $k$, $p\in S$, $\pi\colon\tilde S=\Bl_pS\to S$ y $E=\pi^{-1}(p)$.
+
+\begin{proposicion}[Aritmética de un blow-up]\label{prop:aritmetica}
+\begin{enumerate}[label=(\alph*)]
+\item $E\cong\PP^1$ y $E^2=-1$ (el fibrado normal de $E$ es el tautológico $\cO_{\PP^1}(-1)$, como se vio en el Ejemplo~\ref{ej:A2}).
+\item $\Pic\tilde S=\pi^*\Pic S\oplus\ZZ\,E$, con $\pi^*D\cdot\pi^*D'=D\cdot D'$ y $\pi^*D\cdot E=0$.
+\item Si $C\subset S$ es una curva con $\mult_pC=m$, entonces $\pi^*C=\tilde C+mE$, $\tilde C\cdot E=m$ y
+\[
+\tilde C^{\,2}=C^2-m^2.
+\]
+\end{enumerate}
+\end{proposicion}
+
+\begin{proof}[Demostración de (c) a partir de (a), (b)]
+De $\tilde C=\pi^*C-mE$ se obtiene $\tilde C^2=C^2-2m(\pi^*C\cdot E)+m^2E^2=C^2-m^2$ y $\tilde C\cdot E=-mE^2=m$.
+\end{proof}
+
+\begin{teorema}[Castelnuovo, blow-down]\label{teo:castelnuovo}
+Sea $S'$ una superficie proyectiva lisa y $E\subset S'$ una curva con $E\cong\PP^1$ y $E^2=-1$. Entonces existen una superficie proyectiva lisa $S_0$, un punto $p\in S_0$ y un morfismo $f\colon S'\to S_0$ con $S'\cong\Bl_pS_0$ y $E$ el divisor excepcional.
+\end{teorema}
+
+\noindent\emph{Idea.} Se toma $H$ muy amplio con $H^1(S',\cO(H))=0$ y se pone $H'=H+(H\cdot E)E$. Entonces $H'\cdot E=0$ y el sistema lineal $|H'|$ contrae $E$ a un punto liso; ver Hartshorne, cap.~V, Teor.~5.7.
+
+\begin{ejemplo}[$\PP^2$ en un punto]
+Sea $p\in\PP^2$ y $L$ una recta por $p$. Entonces $\tilde L^2=1-1=0$, $\tilde L\cdot E=1$. La proyección desde $p$ da $\Bl_p\PP^2\to\PP^1$, una fibración en $\PP^1$ cuyas fibras son las transformadas estrictas de las rectas por $p$ ($=F_1$). Contraer $E$ (una $(-1)$-curva) devuelve $\PP^2$.
+\end{ejemplo}
+
+\begin{ejemplo}[$\PP^2$ en dos puntos]\label{ej:dospuntos}
+Sean $p_1\ne p_2$ en $\PP^2$, $E_1,E_2$ los divisores excepcionales y $L$ la recta que los une. Entonces $\tilde L^2=1-1-1=-1$, luego $\tilde L$ es una $(-1)$-curva. Se puede contraer: la superficie resultante tiene $K^2=7+1=8$ y las imágenes de $E_1,E_2$ tienen auto-intersección $-1+1=0$ y se cortan en un punto; es $\PP^1\times\PP^1$. Así, $\Bl_{p_1,p_2}\PP^2\cong\Bl_q(\PP^1\times\PP^1)$.
+\end{ejemplo}
+
+\begin{observacion}[El blow-down tiene límites]
+Castelnuovo contrae sólo $(-1)$-curvas. La curva excepcional de la resolución de $A_1$ tiene auto-intersección $-2$ (ver \S6), y su contracción devuelve la superficie \emph{singular} $A_1$. Es el fenómeno típico: resolver = hacer blow-ups; contraer curvas de auto-intersección $\le-2$ produce singularidades.
+\end{observacion}
+
+% =====================================================
+\section{Resolución de singularidades (15 min)}
+
+\begin{definicion}
+Una \emph{resolución de singularidades} de una variedad (esquema íntegro) $X$ es un morfismo propio y birracional $f\colon X'\to X$ con $X'$ liso.
+\end{definicion}
+
+\begin{teorema}[Hironaka, 1964]\label{teo:hironaka}
+Sea $X$ un esquema reducido de tipo finito sobre un cuerpo $k$ de característica $0$. Existe una sucesión finita de blow-ups
+\[
+X_n\to X_{n-1}\to\cdots\to X_1\to X_0=X
+\]
+a lo largo de centros \emph{lisos} (contenidos en el lugar singular) tal que $X_n$ es liso. Además, para $X\subset Y$ con $Y$ liso, se puede lograr que la transformada total de $X$ más los divisores excepcionales formen un divisor de cruces normales simples (resolución \emph{encajada}).
+\end{teorema}
+
+\noindent\emph{Estado del arte.} La demostración original es muy larga; existen pruebas simplificadas y constructivas (Villamayor, Bierstone--Milman, Włodarczyk, Kollár; ver bibliografía). En característica $p>0$ el problema es conocido para curvas, superficies (Zariski, Abhyankar, Lipman) y dimensión $3$ (Cossart--Piltant), y es abierto en general.
+
+\begin{proposicion}[Curvas planas]\label{prop:curvas}
+Sea $C$ una curva plana reducida. Sea $p\in C$ de multiplicidad $m$ y $\delta_p=\dim_k\widetilde{\cO}_{C,p}/\cO_{C,p}$ (invariante delta). Entonces
+\[
+\delta_p(C)=\frac{m(m-1)}2+\sum_{q\in\tilde C\cap E}\delta_q(\tilde C).
+\]
+En particular $\sum\delta$ baja estrictamente ($\ge1$) con cada blow-up en un punto singular ($m\ge2$), luego después de un número finito de blow-ups la transformada estricta es lisa.
+\end{proposicion}
+
+\noindent(Referencia: Hartshorne, cap.~V, \S3.) Se comprueba con lo ya visto: nodo y cúspide tienen $m=2$ y $\delta=1=\tfrac{2\cdot1}{2}+0$, y ambos se resuelven con un blow-up.
+
+\begin{ejemplo}[La singularidad $A_1$: $z^2=xy$]\label{ej:A1}
+Sea $X=V(z^2-xy)\subset\A^3$, el cono sobre la cónica $Q=V(z^2-xy)\subset\PP^2$. Se explota el origen de $\A^3$ y se toma la transformada estricta $\tilde X$. Cartas:
+\begin{itemize}
+\item $x\ne0$: $(x,y,z)=(x,xb,xc)$ y $z^2=xy\Rightarrow x^2c^2=x^2b$, luego $b=c^2$: $\tilde X\cap U_x=\Spec k[x,c]\cong\A^2$.
+\item $y\neq0$: análogo: $\Spec k[y,c]\cong\A^2$.
+\item $z\ne0$: $(x,y,z)=(za,zb,z)$ y $z^2=z^2ab\Rightarrow ab=1$: $\Spec k[z,a,a^{-1}]$, liso.
+\end{itemize}
+Luego $\tilde X$ es lisa, $\tilde X\to X$ es una resolución y $E=\tilde X\cap\{\text{excepcional}\}\cong Q\cong\PP^1$.
+
+\emph{Auto-intersección de $E$.} $\tilde X$ es el espacio total de $\cO_{\PP^2}(-1)|_Q$ (por el mismo argumento del Ejemplo~\ref{ej:A2}), así que el fibrado normal de $E$ es $\cO_{\PP^2}(-1)|_Q$. Como $Q$ es una cónica, $\cO_{\PP^2}(1)|_Q\cong\cO_{\PP^1}(2)$; por tanto $N_{E/\tilde X}\cong\cO_{\PP^1}(-2)$ y $E^2=-2$.
+\end{ejemplo}
+
+\begin{observacion}[Familia $A_{n-1}$]
+Para $xy=z^n$ la carta $z\ne0$ del blow-up del origen es $ab=z^{n-2}$, o sea una $A_{n-3}$; las otras dos cartas son lisas (Ejercicio~\ref{ej:An}). Así la singularidad se ``reduce de dos en dos'' y se resuelve con una cadena de $(-2)$-curvas (diagramas de Dynkin de tipo $A$).
+\end{observacion}
+
+\subsection*{Síntesis}
+\begin{center}
+\begin{tabular}{@{}lll@{}}
+\toprule
+Herramienta & Qué hace & Dónde aparece \\
+\midrule
+$R(I)$, $\Proj$ & construye $\Bl_IX$ & Def. de blow-up \\
+$\pi\colon\Bl_IX\to X$ & homomorfismo graduado $A\to R(I)$ & Prop.~\ref{prop:homo-morf}(c) \\
+$\gr_I(A)$ & describe $E=\Proj\gr_I(A)$ & Prop.~\ref{prop:basicas}(c) \\
+Transformada estricta & baja multiplicidad / $\delta$ & Prop.~\ref{prop:estricta}, \ref{prop:curvas} \\
+Castelnuovo & blow-down de $(-1)$-curvas & Teor.~\ref{teo:castelnuovo} \\
+Hironaka & resolución en car.\ $0$ & Teor.~\ref{teo:hironaka} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% =====================================================
+\section{Ejercicios (10 min en clase; el resto como tarea)}
+
+\subsection*{Nivel A (en clase)}
+
+\begin{ejercicio}\label{ej:principal}
+Sea $I=(f)$ con $f\in A$ no divisor de cero. Pruebe que $\pi\colon\Bl_IX\to X$ es un isomorfismo (vea cuántas cartas hay y qué es $A[I/f]$).
+\end{ejercicio}
+
+\begin{ejercicio}
+En el Ejemplo~\ref{ej:A2}, verifique que en $U_1\cap U_2$ se tiene $ss'=1$, que $\pi$ es un isomorfismo fuera de $E$ y que $\pi^{-1}(0)\cong\PP^1$.
+\end{ejercicio}
+
+\begin{ejercicio}
+Calcule la transformada estricta en $\Bl_0\A^2$ de (a) la recta $y=2x$, (b) la parábola $y=x^2$, (c) el par de rectas $xy=0$. Verifique $\tilde C\cdot E=m$ y que los puntos de $\tilde C\cap E$ son las tangentes en $0$.
+\end{ejercicio}
+
+\subsection*{Nivel B (tarea)}
+
+\begin{ejercicio}[Tacnodo]
+Resuelva $y^2=x^4$ por blow-ups sucesivos en el origen. ¿Cuántos se necesitan para que la transformada estricta sea lisa? ¿Y para obtener cruces normales simples con los divisores excepcionales?
+\end{ejercicio}
+
+\begin{ejercicio}\label{ej:gr}
+Pruebe que $I\,R(I)=\bigoplus_{n}I^{n+1}t^n$ y que $R(I)/I\,R(I)\cong\gr_I(A)$. Para $A=k[x,y]$, $I=(x,y)$ deduzca $\gr_I(A)=k[\bar x,\bar y]$ y $E=\Proj\gr_I(A)=\PP^1_k$, y describa la inmersión cerrada $E\hookrightarrow\Bl_IX$ como inducida por un homomorfismo graduado sobreyectivo.
+\end{ejercicio}
+
+\begin{ejercicio}
+En el Ejemplo~\ref{ej:nored} verifique la descripción de las dos cartas y pruebe que el punto $(0,0,0)\in V(x^2-yu)$ es singular. ¿Qué pasa si se toma $I=(x,y^2)$ en lugar de $(x^2,y)$?
+\end{ejercicio}
+
+\begin{ejercicio}\label{ej:An}
+Sea $X_n=V(xy-z^n)\subset\A^3$ ($n\ge2$). Explote el origen y compruebe: las cartas $x\neq0$ e $y\neq0$ son lisas; la carta $z\ne0$ es $V(ab-z^{n-2})$. Deduzca que $X_n$ se resuelve con $\lfloor n/2\rfloor$ blow-ups de puntos y describa $E$ para $n=3$ (dos $\PP^1$ que se cortan en un punto).
+\end{ejercicio}
+
+\begin{ejercicio}
+Sea $C\subset\PP^2$ una cúbica nodal y $\tilde C$ su transformada estricta al explotar el nodo. Calcule $\tilde C^2$ y pruebe que $\tilde C\cong\PP^1$.
+\end{ejercicio}
+
+\begin{ejercicio}
+Compruebe la fórmula de la Prop.~\ref{prop:curvas} para $y^2=x^5$: $\delta=2$; halle $m$ en cada paso y las contribuciones $\delta_q$.
+\end{ejercicio}
+
+\subsection*{Nivel C (desafío)}
+
+\begin{ejercicio}[Blow-up en dimensión 3]
+Sea $Y=V(xy-zw)\subset\A^4$ (nodo ordinario de dimensión 3). Pruebe que el blow-up del origen $\tilde Y$ es liso, con divisor excepcional $E\cong\PP^1\times\PP^1$ (cuádrica de $\PP^3$). ¿Por qué no se contrae con Castelnuovo?
+\end{ejercicio}
+
+\begin{ejercicio}[Transformación de Cremona]
+Sean $p_1,p_2,p_3\in\PP^2$ no colineales y $S=\Bl_{p_1,p_2,p_3}\PP^2$. Sean $E_i$ los divisores excepcionales y $L_{ij}$ la recta por $p_i,p_j$. Pruebe que $\tilde L_{ij}$ y $E_i$ son $(-1)$-curvas, que $\tilde L_{12},\tilde L_{13},\tilde L_{23}$ son disjuntas y que al contraerlas (Castelnuovo) se obtiene de nuevo $\PP^2$. Interprete el resultado como la transformación cuadrática de Cremona $[x:y:z]\mapsto[yz:xz:xy]$.
+\end{ejercicio}
+
+% =====================================================
+\section{Pistas y soluciones breves}
+
+\begin{enumerate}[label=\textbf{Ej.~\arabic*.},leftmargin=*,itemsep=4pt]
+\item $R(I)=A[ft]\cong A[t]$ y sólo hay una carta: $A[I/f]=A[f/f]=A$.
+\item De $s=y/x$, $s'=x/y$ sale $ss'=1$. Si $x\ne0$, $(x,y)\mapsto(x,y/x)$ es inversa de $\pi$ (análogo si $y\ne0$). $\pi^{-1}(0)=\{x=0\}\cup\{y=0\}$ pegadas por $s\mapsto1/s$: $\PP^1$.
+\item (a) $y=2x\Rightarrow s=2$: recta $s=2$, corta $E$ en $s=2$. (b) $xs=x^2\Rightarrow\tilde C\colon s=x$; corta $E$ en $(x,s)=(0,0)$ transversalmente. (c) $x\cdot xs=0\Rightarrow s=0$ (la recta $y=0$) y $x=0$ es $E$; en la otra carta $y=0$ (recta $x=0$, o sea $s'=0$). Las dos transformadas estrictas son disjuntas, cada una corta $E$ una vez, $\tilde C\cdot E=2=m$.
+\item $y=xs$: $s^2=x^2$, dos ramas $s=\pm x$ que se cortan en $(0,0)$ (nodo, $m=2$), aún singular. Segundo blow-up $s=xs'$: $s'^2=1$, dos curvas disjuntas; ahora la transformada estricta es lisa. Cortan a $E_2\colon x=0$ en $s'=\pm1$ y $\tilde E_1$ corta a $E_2$ en $s'=\infty$: cruces normales simples. \textbf{Dos} blow-ups bastan en ambos sentidos.
+\item $I\,R(I)$ es generado por $I\cdot It^n$, y el ideal $IR(I)$ en grado $n$ es $I\cdot I^nt^n=I^{n+1}t^n$, luego el cociente en grado $n$ es $I^n/I^{n+1}$. Para $(x,y)$: $\gr=k[x,y]/(\text{nada})$ por ser sucesión regular. $E=\Proj k[\bar x,\bar y]=\PP^1$; la inmersión cerrada viene de la sobreyección graduada $R(I)\to\gr_I(A)$.
+\item Cartas: ver texto. En $x^2=yu$ el gradiente $(2x,u,y)$ se anula en $0$: singular. Con $I=(x,y^2)$ se obtiene la misma situación intercambiando $x\leftrightarrow y$.
+\item $x y=z^n$, $x=x$, $y=xb$, $z=xc$: $x^2b=x^nc^n\Rightarrow b=x^{n-2}c^n$: liso. En $z\neq0$: $x=za$, $y=zb$: $z^2ab=z^n\Rightarrow ab=z^{n-2}$: $A_{n-3}$ (para $n=3$ es $ab=z$, liso, con $E=\{z=0,\ ab=0\}$ dos rectas). Por inducción $n\mapsto n-2$ hay $\lfloor n/2\rfloor$ pasos.
+\item $C^2=9$, $m=2$: $\tilde C^2=9-4=5$. $p_a(\tilde C)=p_a(C)-\tfrac{m(m-1)}{2}=1-1=0$ y $\tilde C$ es lisa, luego $\tilde C\cong\PP^1$.
+\item $m=2$ en $y^2=x^5$: $\delta=1+\delta(\text{cúspide})=1+1=2$, pues $y=xs$ da $s^2=x^3$ (cúspide, $m=2$), y luego $s=xs'$ da $s'^2=x$ (lisa).
+\item Cartas: $x\ne0$: $(x,c,d)$ con $b=cd$: liso; análogamente $y,z,w$. $E=V(xy-zw)\subset\PP^3$ es $\PP^1\times\PP^1$. No es una curva: Castelnuovo es un resultado de \emph{superficies}.
+\item $\tilde L_{ij}^2=1-1-1=-1$ y $E_i^2=-1$. $\tilde L_{12}$ y $\tilde L_{13}$ se cortaban en $p_1$, pero tras explotar $p_1$ tienen tangentes distintas y quedan separadas; idem en $p_2,p_3$. Contraer las tres da una superficie lisa con $\rho=4-3=1$ y $K^2=6+3=9$: es $\PP^2$.
+\end{enumerate}
+
+% =====================================================
+\section{Complemento: blow-ups y sistemas dinámicos polinomiales}\label{sec:dinamica}
+
+Este complemento (fuera de las dos horas de clase) muestra por qué lo anterior es una herramienta de la teoría de sistemas dinámicos polinomiales de grado $n$, y lo aplica a un sistema concreto. Las cuentas de \S\ref{sec:aplicacion} se verificaron con álgebra simbólica y, donde se indica, numéricamente; los resultados de la literatura se citan sin demostración.
+
+\subsection{Tiempo discreto: aplicaciones polinomiales y racionales}
+
+Una aplicación polinomial $F=(F_1,F_2)\colon\A^2\to\A^2$ de grado $d$ se homogeneíza a
+\[
+\bar F[x:y:z]=[\tilde F_1:\tilde F_2:z^d],\qquad \tilde F_i=z^dF_i(x/z,\,y/z).
+\]
+Es el morfismo asociado al homomorfismo de anillos $k[T_0,T_1,T_2]\to k[x,y,z]$, $T_0\mapsto\tilde F_1$, $T_1\mapsto\tilde F_2$, $T_2\mapsto z^d$, que envía grado $e$ a grado $de$; es graduado si en el destino se toma el subanillo de Veronese $k[x,y,z]^{(d)}$, que tiene el mismo $\Proj$. Por la Proposición~\ref{prop:homo-morf}(b) queda definido un morfismo fuera del \emph{lugar base} $B=V(\tilde F_1,\tilde F_2,z^d)$: los puntos de $B$ son los \emph{puntos de indeterminación}.
+
+\begin{proposicion}[Resolución de la indeterminación]\label{prop:indet}
+Sea $A$ íntegro, $\mathfrak b=(f_1,\dots,f_r)$ con $f_i\ne0$ y $\varphi\colon\Spec A\dashrightarrow\PP^{r-1}$, $p\mapsto[f_1(p):\cdots:f_r(p)]$. Entonces $\varphi$ se extiende a un morfismo $\tilde\varphi\colon\Bl_{\mathfrak b}(\Spec A)\to\PP^{r-1}$, que es la composición de la inmersión cerrada de la Prop.~\ref{prop:cartas}(a) con la proyección $\PP^{r-1}_A\to\PP^{r-1}$. En particular $\Bl_{\mathfrak b}(\Spec A)$ es la clausura de la gráfica de $\varphi$.
+\end{proposicion}
+
+\begin{proof}
+En la carta $U_i=\Spec A[\mathfrak b/f_i]$ la aplicación es $[f_1/f_i:\cdots:1:\cdots:f_r/f_i]$, regular porque $f_j/f_i\in A[\mathfrak b/f_i]$; en las intersecciones ambas fórmulas definen el mismo punto. Es la asignación $T_i\mapsto f_it$ de la Prop.~\ref{prop:cartas}(a).
+\end{proof}
+
+\begin{ejemplo}[Cremona]\label{ej:cremona}
+$\sigma[x:y:z]=[yz:xz:xy]$ tiene lugar base $V(yz,xz,xy)=\{p_1,p_2,p_3\}$ con $p_1=[1:0:0]$, $p_2=[0:1:0]$, $p_3=[0:0:1]$. Por la Prop.~\ref{prop:indet}, $\sigma$ se levanta a un morfismo sobre $S=\Bl_{p_1,p_2,p_3}\PP^2$; se comprueba en cartas (Ejercicio~\ref{ej:cremona-ej}; véase también el ejercicio de Cremona del Nivel~C) que es un automorfismo de $S$ que intercambia $E_i$ con la transformada estricta $\tilde L_{jk}$ de la recta por $p_j,p_k$. Además $\sigma\circ\sigma=\mathrm{id}$, pues $\sigma(\sigma[x:y:z])=xyz\,[x:y:z]$: en coordenadas homogéneas la composición tiene grado $4$ y tras simplificar queda de grado $1$, menor que $(\deg\sigma)^2$. Es decir, $\sigma$ \emph{no es algebraicamente estable} en $\PP^2$, pero sí lo es en el modelo $S$.
+\end{ejemplo}
+
+\begin{ejemplo}[Hénon]\label{ej:henon}
+$f(x,y)=(y,\,y^2+c-ax)$, $a\neq0$, se extiende a $[x:y:z]\mapsto[yz:\,y^2+cz^2-axz:\,z^2]$. El lugar base es el punto $[1:0:0]$; la recta del infinito $z=0$ se contrae al punto fijo $[0:1:0]$, que no es de indeterminación. Como ninguna curva es enviada por una iterada a $[1:0:0]$, $f$ es algebraicamente estable en $\PP^2$ y $\deg f^n=2^n$.
+\end{ejemplo}
+
+Para una superficie $X$ y una aplicación $f\colon X\dashrightarrow X$, ser \emph{algebraicamente estable} (ninguna curva es contraída por una iterada a un punto de indeterminación) equivale a $(f^n)^*=(f^*)^n$ en el grupo de Néron--Severi, y entonces el \emph{grado dinámico} $\lambda_1(f)=\lim(\deg f^n)^{1/n}$ es el radio espectral de $f^*$; es un invariante de conjugación birracional que se calcula con álgebra lineal, como $\Pic\tilde S=\pi^*\Pic S\oplus\ZZ E$ en la Prop.~\ref{prop:aritmetica}. Diller y Favre \cite{DF} estudian cuándo blow-ups y blow-downs dan un modelo estable para aplicaciones birracionales de superficies; McMullen \cite{McM} construye automorfismos de entropía positiva de $\PP^2$ explotado en puntos; Silverman \cite{Sil} trata el caso aritmético, donde los modelos sobre $\Spec\mathcal O_K$ se modifican con blow-ups.
+
+\subsection{Tiempo continuo: campos polinomiales}
+
+Sea $\dot x=X(x,y)$, $\dot y=Y(x,y)$ un campo polinomial de grado $d=\max(\deg X,\deg Y)$. Un equilibrio $p$ con matriz jacobiana $J$ es \emph{hiperbólico} si ambos valores propios tienen parte real $\ne0$, \emph{semihiperbólico} si uno es $0$ y el otro no, \emph{nilpotente} si $J\neq0$ con ambos valores propios nulos, y \emph{totalmente degenerado} si $J=0$. Los hiperbólicos se tratan con Hartman--Grobman y los semihiperbólicos con el teorema de la variedad central (se reducen a una ecuación escalar $\dot w=aw^m+\cdots$); \emph{sólo los nilpotentes y los totalmente degenerados necesitan blow-ups} \cite{DLA}.
+
+\begin{proposicion}[Blow-up direccional de un campo]\label{prop:campo}
+Sea $p=0$ y sean $X_k,Y_k$ las partes homogéneas de grado mínimo $k\ge1$ de $X,Y$, con $C_k(x,y)=xY_k-yX_k\not\equiv0$ (polinomio característico). En la carta $y=xs$ del Ejemplo~\ref{ej:A2}:
+\[
+\dot x=x^kX_k(1,s)+O(x^{k+1}),\qquad \dot s=x^{k-1}\big[Y_k(1,s)-sX_k(1,s)\big]+O(x^k).
+\]
+Dividiendo por $x^{k-1}$ se obtiene un campo regular $\dot x=xX_k(1,s)+O(x^2)$, $\dot s=C_k(1,s)+O(x)$ para el que el divisor excepcional $E=\{x=0\}$ es invariante y sus equilibrios son las raíces de $C_k(1,s)$, es decir, las \emph{direcciones características}.
+\end{proposicion}
+
+\begin{proof}
+De $\dot s=(Y-sX)/x$ evaluado en $(x,xs)$. La división es legítima porque $x$ es la ecuación local de $E$: $I\cdot\cO=(x)$ es invertible (Teorema~\ref{teo:universal}(i)).
+\end{proof}
+
+\begin{observacion}[Blow-up con pesos]\label{obs:pesos}
+Para equilibrios nilpotentes (por ejemplo Bogdanov--Takens) se usa un blow-up con pesos $(a,b)$: $x=r^a\bar x$, $y=r^b\bar y$. Algebraicamente es $\Proj\bigoplus_{m\ge0}I_m$ con $I_m=(x^iy^j: ai+bj\ge m)$, una álgebra de Rees para la filtración por pesos, y el divisor excepcional es $\PP(a,b)$. Es la misma construcción de la clase con otra graduación.
+\end{observacion}
+
+\begin{teorema}[Seidenberg, 1968]\label{teo:seidenberg}
+Sea $\xi$ un campo plano polinomial (o analítico) con singularidades aisladas. Tras un número finito de blow-ups en puntos, todas las singularidades del campo transformado son \emph{reducidas}: tienen valores propios $\lambda_1,\lambda_2$ con $\lambda_2\neq0$ y $\lambda_1/\lambda_2\notin\mathbb Q_{>0}$ (se admite $\lambda_1=0$).
+\end{teorema}
+
+Es el análogo del teorema de Hironaka para campos y foliaciones sobre superficies \cite{Sei}.
+
+\paragraph{Compactificación de Poincaré = $\PP^2$.} Con $(x,y)\mapsto[x:y:1]$ se tiene $\RR^2\subset\RR\PP^2$, y las cartas afines $D_+(X)$, $D_+(Y)$ del Ejemplo~\ref{ej:Pn} son las cartas $W_1\colon(x,y)=(1/z,\,u/z)$ y $W_2\colon(x,y)=(v/z,\,1/z)$. Multiplicando el campo por $z^{d-1}$:
+\begin{align*}
+W_1:&\quad \dot u=z^d\,[Y-uX],\quad \dot z=-z^{d+1}X\qquad\text{evaluados en }(1/z,\,u/z),\\
+W_2:&\quad \dot v=z^d\,[X-vY],\quad \dot z=-z^{d+1}Y\qquad\text{evaluados en }(v/z,\,1/z).
+\end{align*}
+La recta del infinito $\{z=0\}$ es invariante. En las cartas antipodales el campo es $(-1)^{d-1}$ veces el de $W_i$: misma estructura con el tiempo invertido si $d$ es par.
+
+% -----------------------------------------------------
+\subsection{Aplicación al sistema propuesto}\label{sec:aplicacion}
+
+Sean $P,Q,R,S>0$ y
+\begin{equation}\label{eq:S}
+\dot x=\tfrac12\big(f(x)-y\big),\qquad \dot y=P\,y\,g(x,y),\qquad
+f(x)=(1-x^2)\,x\,(x+Q),\quad g=x-(S+Ry)(x+Q).
+\end{equation}
+Es un campo polinomial de grado $d=4$ (término dominante $-x^4/2$ en $\dot x$); la recta $y=0$ es invariante.
+
+\paragraph{(a) Equilibrios sobre el eje $y=0$.} Son $x\in\{0,1,-1,-Q\}$. Sobre $y=0$ la jacobiana es triangular, con valores propios $\tfrac12f'(x_0)$ y $P\,g(x_0,0)$, $g(x,0)=x-S(x+Q)$:
+
+\begin{center}
+\begin{tabular}{@{}l l p{6.2cm}@{}}
+\toprule
+Equilibrio & Valores propios & Tipo \\
+\midrule
+$(0,0)$ & $\tfrac Q2,\ -PQS$ & silla \\
+$(1,0)$ & $-(1+Q),\ P\big(1-S(1+Q)\big)$ & nodo estable si $S(1+Q)>1$; silla si $<1$ \\
+$(-1,0)$ & $1-Q,\ P\big(S(1-Q)-1\big)$ & $Q>1$: nodo estable; $Q<1$: nodo inestable si $S(1-Q)>1$, silla si $<1$ \\
+$(-Q,0)$ & $\tfrac{Q(Q^2-1)}2,\ -PQ$ & $Q>1$: silla; $Q<1$: nodo estable \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Para $Q=1$ los equilibrios $(-1,0)$ y $(-Q,0)$ coinciden: los valores propios son $0$ y $-P$ y sobre el eje $\dot x\approx-(x+1)^2$, luego es un punto \emph{silla-nodo} (semihiperbólico). Lo mismo ocurre en $(1,0)$ si $S(1+Q)=1$ y en $(-1,0)$ si $S(1-Q)=1$. \emph{En estos casos basta la variedad central: no hace falta blow-up.}
+
+\paragraph{(b) Equilibrios fuera del eje.} Sea $\Phi(x)=\dfrac{x}{x+Q}-R\,f(x)$ y
+\[
+h(x)=(x+Q)\big(S-\Phi(x)\big)=R(x+Q)f(x)-(1-S)x+SQ .
+\]
+
+\begin{proposicion}\label{prop:interior}
+\begin{enumerate}[label=(\alph*)]
+\item Los equilibrios con $y\ne0$ son los $(x_*,f(x_*))$ con $h(x_*)=0$, $f(x_*)\ne0$ (es decir, $\Phi(x_*)=S$); $h$ tiene grado $5$ y coeficiente principal $-R$. Se cumple $g(x,f(x))=-h(x)$.
+\item Si $S(1+Q)\ne1$ y $S(1-Q)\ne1$ hay al menos uno y a lo sumo cinco equilibrios con $y\neq0$.
+\item En ellos, $\det J=\tfrac P2\,f(x_*)\,(x_*+Q)\,\Phi'(x_*)$ y $\tr J=\tfrac12f'(x_*)-PR\,(x_*+Q)f(x_*)$.
+\end{enumerate}
+\end{proposicion}
+
+\begin{proof}[Esbozo]
+(a) $g=0$, $y=f$ da $x(1-S)-SQ=Rf(x+Q)$. (b) $h$ tiene grado impar, luego una raíz real; además $h(0)=SQ$, $h(-Q)=Q$, $h(1)=S(1+Q)-1$, $h(-1)=1-S(1-Q)$, de modo que $f(x_*)=0$ sólo si $S(1\pm Q)=1$. (c) Con $g=0$: $J=\begin{psmallmatrix}f'/2&-1/2\\Py\,g_x&Py\,g_y\end{psmallmatrix}$, $g_x=1-S-Ry$, $g_y=-R(x+Q)$, y $\det J=\tfrac{Py}2\big[1-S-Ry-R(x+Q)f'\big]=-\tfrac P2f\,h'$; como $h'=(S-\Phi)-(x+Q)\Phi'$ y $S=\Phi$ en la raíz, sale la fórmula.
+\end{proof}
+
+\emph{Consecuencias.} (i) Hay bifurcación silla-nodo de equilibrios cuando $S$ es un \emph{valor crítico} de $\Phi$ (raíz doble de $h$). (ii) Si $S(1+Q)=1$ o $S(1-Q)=1$, un equilibrio interior atraviesa el eje: bifurcación transcrítica en el eje invariante, de nuevo semihiperbólica. (iii) Los conteos $1,3,5$ ocurren: para $Q=0.3$, $R=1$ los valores críticos de $\Phi$ son $\approx0.3204,\ 0.3388,\ 1.3962$ y por ejemplo $S=0.33$ da tres raíces ($x\approx0.266,\ 0.457,\ 0.660$), $S=0.36$ y $S=1$ una, $S=1.5$ tres. (iv) \textbf{Bogdanov--Takens}: $\det J=\tr J=0$ equivale a $\Phi'(x_*)=0$ y $f'(x_*)=2PR(x_*+Q)f(x_*)$; hay soluciones con $P,S>0$. Con $Q=0.3$, $R=1$ se obtiene (numéricamente) $x_*\approx0.5751$, $y_*\approx0.3368$, $P\approx0.6646$, $S\approx0.3204$, con $J\approx\begin{psmallmatrix}0.196&-0.5\\0.0767&-0.196\end{psmallmatrix}$, $\det J\approx\tr J\approx0$ y $J\neq0$: un equilibrio \emph{nilpotente}. Es un candidato a punto de Bogdanov--Takens; para que lo sea falta comprobar dos condiciones de no degeneración. Ahí sí se necesita un blow-up con pesos $(1,2)$ (Observación~\ref{obs:pesos}).
+
+\paragraph{(c) El infinito.} Aquí $d=4$ y las partes de grado $4$ son $X_4=-x^4/2$, $Y_4=0$, con $xY_4-yX_4=\tfrac12x^4y$: dos direcciones simples ($y=0$, por ambos lados) y una dirección $x=0$ de multiplicidad $4$.
+
+\emph{Direcciones $(\pm1,0)$ (carta $W_1$).} Queda $\dot z=\tfrac z2+\tfrac Q2z^2-\tfrac12z^3-\cdots$, $\dot u=\tfrac u2+\tfrac Q2uz-PR\,u^2z-\cdots$, con un único equilibrio $(z,u)=(0,0)$ de parte lineal $\tfrac12\mathrm{Id}$: nodo hiperbólico. \emph{No hay blow-up.}
+
+\emph{Direcciones $(0,\pm1)$ (carta $W_2$).} Se obtiene
+\begin{align*}
+\dot v&=-\tfrac12z^3+PR\,v^2z+PQR\,vz^2-\tfrac12v^4-\tfrac Q2v^3z+\big(P(S-1)+\tfrac12\big)v^2z^2+\big(PQS+\tfrac Q2\big)vz^3,\\
+\dot z&=PR\,vz^2+PQR\,z^3+P(S-1)\,vz^3+PQS\,z^4 .
+\end{align*}
+El origen es \emph{totalmente degenerado} ($J=0$); la parte de grado $3$ tiene polinomio característico $C_3=\tfrac12z^4$: la única dirección característica es $z=0$ (la propia recta del infinito), con multiplicidad $4$. Se hace el blow-up $z=v\zeta$ y se divide por $v^2$ (Prop.~\ref{prop:campo}):
+\begin{align*}
+\dot v&=v\big(PR\zeta+PQR\zeta^2-\tfrac12\zeta^3\big)+v^2\big(-\tfrac12-\tfrac Q2\zeta+(P(S-1)+\tfrac12)\zeta^2+(PQS+\tfrac Q2)\zeta^3\big),\\
+\dot\zeta&=\tfrac12\zeta^4+v\big(\tfrac12\zeta+\tfrac Q2\zeta^2-\tfrac12\zeta^3-\tfrac Q2\zeta^4\big).
+\end{align*}
+El origen $(v,\zeta)=(0,0)$ sigue con parte lineal nula, pero ahora la parte cuadrática es $\big(-\tfrac12v^2+PR\,v\zeta,\ \tfrac12v\zeta\big)$ con polinomio característico $C_2=v\,\zeta\,(v-PR\,\zeta)$: \emph{tres} direcciones simples distintas. Un segundo blow-up en cada dirección da (salvo inversión del tiempo según el signo de la coordenada radial):
+\begin{center}
+\begin{tabular}{@{}l l l@{}}
+\toprule
+Dirección & Valores propios & Tipo \\
+\midrule
+$\zeta=0$ (carta $\zeta=v\eta$) & $-\tfrac12,\ 1$ & silla \\
+$v=PR\,\zeta$ (carta $v=\zeta\xi$, $\xi=PR$) & $-PR,\ \tfrac{PR}2$ & silla \\
+$v=0$ (carta $v=\zeta\xi$, $\xi=0$) & $PR,\ 0$ & semihiperbólico \\
+\bottomrule
+\end{tabular}
+\end{center}
+En el tercero, $\xi=0$ es invariante y $\dot\zeta=\tfrac12\zeta^3$ sobre ella, de multiplicidad impar y coeficiente positivo, con dirección hiperbólica inestable: es topológicamente un nodo inestable. Luego \emph{dos blow-ups consecutivos desingularizan por completo el equilibrio degenerado del infinito}, y el resultado vale para todo $P,Q,R,S>0$ (se usa $PR>0$; si $R=0$ habría más degeneración).
+
+\paragraph{(d) Régimen lento-rápido ($P=\varepsilon\to0$).} El sistema es $\dot x=\tfrac12(f(x)-y)$, $\dot y=\varepsilon\,y\,g$. La \emph{variedad crítica} $\mathcal C_0=\{y=f(x)\}$ es normalmente hiperbólica donde $f'\neq0$, atractora si $f'<0$ y repulsora si $f'>0$.
+
+\begin{proposicion}\label{prop:pliegues}
+Para todo $Q>0$, $f'$ tiene exactamente tres ceros reales simples $x_1<x_2<x_3$ (los \emph{pliegues}). Las ramas $x<x_1$ y $x_2<x<x_3$ son repulsoras y las ramas $x_1<x<x_2$ y $x>x_3$ son atractoras.
+\end{proposicion}
+
+\begin{proof}
+$f$ tiene las raíces reales $-Q,-1,0,1$ (con $-Q=-1$ doble si $Q=1$); por el teorema de Rolle, $f'$ tiene tres ceros reales entre ellas, simples, y $f\to-\infty$ en $\pm\infty$ fija los signos.
+\end{proof}
+
+El flujo lento sobre $\mathcal C_0$ cumple $f'(x)\,\dot x=-\varepsilon f(x)h(x)$; tras multiplicar por $f'$ queda $\dot x=-f(x)\,h(x)$, cuyos equilibrios son exactamente los del sistema: ceros de $f$ (eje) y de $h$ (interior). En un pliegue $x_i$:
+\begin{itemize}
+\item Si $h(x_i)\neq0$ (y $f(x_i)\ne0$) es un \emph{punto de salto}: se analiza con el blow-up de Krupa--Szmolyan en el espacio ampliado $(x,y,\varepsilon)$ con pesos $(1,2,3)$, $x=r\bar x$, $y=r^2\bar y$, $\varepsilon=r^3\bar\varepsilon$ \cite{KS}.
+\item Si $h(x_i)=0$, es decir $S=\Phi(x_i)=:S_c(x_i)$, un equilibrio del sistema completo está en el pliegue: \emph{punto canard}; se usa $S$ como parámetro de despliegue y el blow-up con pesos $(1,2,1,2)$ en $(x,y,S-S_c,\varepsilon)$ \cite{KS}.
+\end{itemize}
+Ambos son blow-ups con pesos (Observación~\ref{obs:pesos}) en el espacio ampliado. Por ejemplo, para $Q=2$ los pliegues son $x=-\tfrac12$ y $x=\tfrac{-1\pm\sqrt5}2$, con $f=-\tfrac9{16},\,1,\,1$ y
+\[
+S_c\big(-\tfrac12\big)=\tfrac{9R}{16}-\tfrac13,\qquad
+S_c\big(\tfrac{-1+\sqrt5}2\big)=\sqrt5-2-R,\qquad
+S_c\big(\tfrac{-1-\sqrt5}2\big)=-2-\sqrt5-R<0.
+\]
+Como $\tr J\to\tfrac12f'(x_*)$ cuando $P\to0$, la bifurcación de Hopf de un equilibrio interior sólo puede ocurrir para $P$ pequeño cerca de los pliegues: es el escenario típico de la bifurcación de Hopf singular y de la explosión de canards (hay que comprobar las condiciones de no degeneración de \cite{KS}).
+
+\paragraph{(e) Resumen.}
+\begin{center}
+\begin{tabular}{@{}p{5.3cm} p{2.6cm} p{5.6cm}@{}}
+\toprule
+Situación & ¿Blow-up? & Herramienta \\
+\midrule
+Equilibrios hiperbólicos (siempre $(0,0)$) & no & Hartman--Grobman \\
+Silla-nodo o transcrítico: $Q=1$, $S(1\pm Q)=1$, raíces dobles de $h$ & no & variedad central \\
+Nilpotente: $\det J=\tr J=0$ & sí & peso $(1,2)$ \\
+Infinito $(\pm1,0)$ & no & nodo hiperbólico \\
+Infinito $(0,\pm1)$ & sí (2 veces) & direccional, Prop.~\ref{prop:campo} \\
+Pliegues, $P$ pequeño & sí & pesos $(1,2,3)$ y $(1,2,1,2)$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Ejercicios del complemento}
+
+\begin{ejercicio}
+Verifique la tabla de la parte (a) y pruebe que para $Q=1$ el equilibrio $(-1,0)$ es un silla-nodo: calcule el coeficiente cuadrático de $\dot x$ sobre el eje.
+\end{ejercicio}
+
+\begin{ejercicio}
+Demuestre la Proposición~\ref{prop:interior}(c) y deduzca que una bifurcación silla-nodo de equilibrios interiores ocurre exactamente cuando $S$ es un valor crítico de $\Phi$.
+\end{ejercicio}
+
+\begin{ejercicio}
+Calcule la carta $W_1$ del sistema \eqref{eq:S} y pruebe que $(z,u)=(0,0)$ es el único equilibrio del infinito en ella, con parte lineal $\tfrac12\mathrm{Id}$.
+\end{ejercicio}
+
+\begin{ejercicio}[Infinito en $W_2$]
+Reproduzca los dos blow-ups de la parte (c): verifique $C_3=\tfrac12z^4$, el campo tras el primer blow-up, $C_2=v\zeta(v-PR\zeta)$ y los valores propios de la tabla; pruebe que $\dot\zeta=\tfrac12\zeta^3$ sobre $\xi=0$.
+\end{ejercicio}
+
+\begin{ejercicio}
+Pruebe la Proposición~\ref{prop:pliegues} y, para $Q=2$, verifique los valores $f=-\tfrac9{16},1,1$ y las fórmulas de $S_c$. ¿Para qué valores de $R$ son positivos?
+\end{ejercicio}
+
+\begin{ejercicio}[Cremona, versión dinámica]\label{ej:cremona-ej}
+Pruebe que $\sigma\circ\sigma=\mathrm{id}$, que el levantamiento a $S=\Bl_{p_1,p_2,p_3}\PP^2$ es un automorfismo y que intercambia $E_i$ y $\tilde L_{jk}$. Explique por qué $\sigma$ no es algebraicamente estable en $\PP^2$.
+\end{ejercicio}
+
+\begin{ejercicio}[Hénon]
+Compruebe el lugar base, la curva contraída y la estabilidad algebraica del Ejemplo~\ref{ej:henon}. ¿Qué ocurre con el lugar base de $f^{-1}$?
+\end{ejercicio}
+
+\begin{ejercicio}[Desafío]
+(a) Decida si el punto nilpotente numérico de (b)(iv) es un Bogdanov--Takens no degenerado (forma normal y dos coeficientes). (b) ¿Qué cambia en (c) si $R=0$?
+\end{ejercicio}
+
+\subsection{Pistas y soluciones breves del complemento}
+
+\begin{enumerate}[label=\textbf{Ej.~\arabic*.},leftmargin=*,itemsep=4pt,start=12]
+\item La jacobiana en $y=0$ es $\begin{psmallmatrix}f'/2&-1/2\\0&Pg(x_0,0)\end{psmallmatrix}$; con $f'(1)=-2(1+Q)$, $f'(-1)=2(1-Q)$, $f'(-Q)=Q(Q^2-1)$, $f'(0)=Q$ sale la tabla. Para $Q=1$, $f=x(1-x)(1+x)^2\approx-2(x+1)^2$ cerca de $-1$, así que $\dot x\approx-(x+1)^2$ (coeficiente $\ne0$): silla-nodo.
+\item Es la demostración de la Prop.~\ref{prop:interior}(c); $\det J=0$ con $f\ne0$, $x_*+Q\ne0$ equivale a $\Phi'(x_*)=0$.
+\item Con $d=4$: $\dot z=\tfrac z2+\tfrac Q2z^2-\tfrac12z^3-\tfrac Q2z^4+\tfrac12uz^4$ y $\dot u=\tfrac u2+\tfrac Q2uz-PR\,u^2z-\tfrac12uz^2+P(1-S)\,uz^2-PQR\,u^2z^2-\tfrac Q2uz^3-PQS\,uz^3+\tfrac12u^2z^3$. En $z=0$ queda $\dot u=u/2$, luego $u=0$ es el único equilibrio.
+\item Se sustituye $z=v\zeta$ y se divide por $v^2$; para la segunda etapa, por $v$ en la carta $\zeta=v\eta$ y por $\zeta$ en la carta $v=\zeta\xi$. En esta última $\dot\xi=\xi\big(PR-\xi-\zeta^2+\cdots\big)$ tiene el factor $\xi$ y $\dot\zeta=-\tfrac12\zeta\big(-\xi-\zeta^2+\cdots\big)$, que sobre $\xi=0$ da $\tfrac12\zeta^3$.
+\item Rolle, como en la Prop.~\ref{prop:pliegues}. Para $Q=2$, $f'=-2(2x+1)(x^2+x-1)$; en $x^2+x-1=0$ se tiene $f=x^2(x+2)=1$. $S_c(-\tfrac12)>0\iff R>\tfrac{16}{27}$; $S_c(\tfrac{-1+\sqrt5}2)>0\iff R<\sqrt5-2$; el tercero es siempre negativo.
+\item $\sigma(\sigma[x:y:z])=[x^2yz:xy^2z:xyz^2]=xyz\,[x:y:z]$. El grado de la composición en coordenadas es $4$ pero tras simplificar es $1$; la estabilidad algebraica exigiría $(\sigma^2)^*=(\sigma^*)^2$. En $S$, $\sigma$ es un automorfismo y por tanto estable.
+\item Lugar base $\{[1:0:0]\}$; $\{z=0\}\mapsto[0:1:0]$, fijo y fuera del lugar base. El inverso $f^{-1}(x,y)=\big((x^2+c-y)/a,\,x\big)$ se homogeneíza a $[x^2+cz^2-yz:\,axz:\,az^2]$: su lugar base es $[0:1:0]$ y contrae la recta del infinito a $[1:0:0]$, con los papeles intercambiados.
+\item (a) Se lleva $J$ a la forma de Jordan y se desarrolla el campo hasta orden $2$ para obtener los dos coeficientes de la forma normal de Bogdanov--Takens. (b) Si $R=0$ desaparecen los términos con $PR$: $\dot z$ empieza en orden $4$ y los valores propios de la tabla $PR,\,-PR,\,PR/2$ se anulan, así que el equilibrio del infinito es aún más degenerado y hacen falta más blow-ups.
+\end{enumerate}
+
+% =====================================================
+\renewcommand{\refname}{Bibliografía}
+\begin{thebibliography}{99}
+\bibitem{Sha} I.R.~Shafarevich, \emph{Basic Algebraic Geometry} 1 y 2, Springer. (Texto base del curso: $\sigma$-proceso, esquemas.)
+\bibitem{Har} R.~Hartshorne, \emph{Algebraic Geometry}, GTM 52: cap.~II \S7 (blow-ups), cap.~V \S3--5 (superficies, Castelnuovo).
+\bibitem{Cut} S.D.~Cutkosky, \emph{Resolution of Singularities}, GSM 63, AMS, 2004.
+\bibitem{Kol} J.~Kollár, \emph{Lectures on Resolution of Singularities}, Princeton University Press, 2007.
+\bibitem{Vak} R.~Vakil, \emph{The Rising Sea: Foundations of Algebraic Geometry}, notas disponibles en línea (capítulo de blow-ups).
+\bibitem{Hir} H.~Hironaka, \emph{Resolution of singularities of an algebraic variety over a field of characteristic zero}, Ann.\ of Math.\ 79 (1964).
+\bibitem{Sei} A.~Seidenberg, \emph{Reduction of singularities of the differential equation $A\,dy=B\,dx$}, Amer.\ J.\ Math.\ 90 (1968), 248--269.
+\bibitem{DLA} F.~Dumortier, J.~Llibre, J.C.~Artés, \emph{Qualitative Theory of Planar Differential Systems}, Universitext, Springer, 2006.
+\bibitem{KS} M.~Krupa, P.~Szmolyan, \emph{Extending geometric singular perturbation theory to nonhyperbolic points---fold and canard points in two dimensions}, SIAM J.\ Math.\ Anal.\ 33 (2001), 286--314.
+\bibitem{DF} J.~Diller, C.~Favre, \emph{Dynamics of bimeromorphic maps of surfaces}, Amer.\ J.\ Math.\ 123 (2001), 1135--1169.
+\bibitem{McM} C.T.~McMullen, \emph{Dynamics on blowups of the projective plane}, Publ.\ Math.\ IHÉS 105 (2007), 49--89.
+\bibitem{Sil} J.H.~Silverman, \emph{The Arithmetic of Dynamical Systems}, GTM 241, Springer, 2007.
+\end{thebibliography}
+
+\end{document}

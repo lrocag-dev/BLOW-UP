@@ -1,0 +1,338 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\IfFileExists{lmodern.sty}{\usepackage{lmodern}}{}
+\IfFileExists{spanish.ldf}{\usepackage[spanish,es-noshorthands]{babel}}{}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{enumitem}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{booktabs}
+\usepackage[colorlinks=true,linkcolor=blue!50!black,urlcolor=blue!50!black]{hyperref}
+\setlength{\parskip}{3pt}
+\linespread{1.04}
+
+\newcommand{\Spec}{\operatorname{Spec}}
+\newcommand{\Proj}{\operatorname{Proj}}
+\newcommand{\Frac}{\operatorname{Frac}}
+\newcommand{\nil}{\operatorname{nil}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\QQ}{\mathbb{Q}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\FF}{\mathbb{F}}
+\newcommand{\A}{\mathbb{A}}
+\newcommand{\PP}{\mathbb{P}}
+\newcommand{\gen}[1]{\langle #1\rangle}
+\newcommand{\p}{\mathfrak{p}}
+\newcommand{\q}{\mathfrak{q}}
+\newcommand{\m}{\mathfrak{m}}
+
+\newcounter{ej}
+\newenvironment{ejercicio}[1]{\refstepcounter{ej}\par\bigskip\noindent\textbf{Ejercicio \theej.} \emph{(#1)}\ }{\par}
+\newenvironment{solucion}{\par\smallskip\noindent\textit{Solución.}\ }{\hfill$\square$\par}
+
+\title{\textbf{Veinte ejercicios resueltos sobre el espectro de un anillo}\\[4pt]
+\large Topología de Zariski, $D(f)$, morfismos $\varphi^*$, localización y $\Proj$ (Capítulo 5)}
+\author{}
+\date{Octubre de 2026}
+
+\begin{document}
+\maketitle
+
+\paragraph{Convenciones.} Los anillos son conmutativos con unidad. $k$ es un cuerpo; cuando se indique, algebraicamente cerrado. Para un anillo $A$:
+\begin{itemize}[itemsep=1pt]
+\item $\Spec A$ es el conjunto de ideales primos de $A$.
+\item $V(\mathfrak a)=\{\p:\p\supseteq\mathfrak a\}$; estos son los cerrados de la topología de Zariski. $D(f)=\Spec A\setminus V(f)=\{\p: f\notin\p\}$ son los abiertos básicos.
+\item $I(Y)=\bigcap_{\p\in Y}\p$. Se cumple $\overline Y=V(I(Y))$ e $I(V(\mathfrak a))=\sqrt{\mathfrak a}$. La clausura de un punto es $\overline{\{\p\}}=V(\p)$.
+\item Un punto $\p$ es cerrado $\iff\p$ es maximal.
+\item Para $\varphi:A\to B$, $\varphi^*:\Spec B\to\Spec A$, $\q\mapsto\varphi^{-1}(\q)$, es continua y $(\varphi^*)^{-1}(V(\mathfrak a))=V(\varphi(\mathfrak a)B)$, $(\varphi^*)^{-1}(D(f))=D(\varphi(f))$.
+\item Los primos de $S^{-1}A$ son los $S^{-1}\p$ con $\p\cap S=\emptyset$ (correspondencia). En particular $\Spec A_f\cong D(f)$.
+\item Se usan sin demostrar: $\sqrt{(0)}=\nil(A)=\bigcap_{\p}\p$ y todo ideal propio está contenido en un maximal.
+\item Para un anillo graduado $S=\bigoplus_{d\ge0}S_d$, $\Proj S$ es el conjunto de primos homogéneos que no contienen a $S_+=\bigoplus_{d>0}S_d$; $D_+(f)=\{\p\in\Proj S: f\notin\p\}$ para $f$ homogéneo, y $D_+(f)\cong\Spec (S_f)_0$.
+\end{itemize}
+
+\bigskip
+\noindent\textbf{Índice temático.}
+\begin{center}
+\begin{tabular}{@{}ll@{}}
+\toprule
+Tema & Ejercicios \\
+\midrule
+Espectros de anillos concretos & 1, 2, 3, 4 \\
+Topología: $V(\mathfrak a)$, clausuras, dimensión & 5, 6, 7 \\
+Abiertos básicos $D(f)$ y compacidad & 8, 9, 10 \\
+Morfismos $\varphi^*$ y fibras & 11, 12 \\
+Localización & 13, 14 \\
+Irreducibilidad y conexión & 15, 16 \\
+$\Proj$ y blow-up & 17, 18, 19, 20 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section*{Ejercicios}
+
+\begin{ejercicio}{Espectros de anillos pequeños}
+Describa $\Spec k$, $\Spec k[x]/(x^2)$, $\Spec(k\times k)$ y $\Spec\ZZ/12$.
+\end{ejercicio}
+\begin{solucion}
+Los primos de $A/I$ corresponden a los primos de $A$ que contienen a $I$.
+
+$\Spec k$: el único ideal propio de un cuerpo es $(0)$, así que es un punto.
+
+$\Spec k[x]/(x^2)$: los primos de $k[x]$ que contienen a $(x^2)$ contienen a $x$ (por ser primos), luego son $\supseteq(x)$; como $(x)$ es maximal, el único es $(x)$. Un punto, aunque el anillo no es un cuerpo ni un dominio: el espectro no ve el nilpotente $\bar x$.
+
+$\Spec(k\times k)$: los ideales son $0$, $k\times0$, $0\times k$ y el total; un ideal $I$ de $k\times k$ cumple $I=I_1\times I_2$ con $I_j\in\{0,k\}$ (si $(a,b)\in I$ también $(a,0)=(1,0)(a,b)$ y $(0,b)$ están en $I$), y los únicos primos son $k\times0$ y $0\times k$, pues el cociente por cada uno es $k$. Dos puntos, ambos cerrados y abiertos.
+
+$\Spec\ZZ/12$: los primos de $\ZZ$ que contienen a $(12)$ son $(2)$ y $(3)$. Dos puntos, discretos. Notemos que $\ZZ/12\cong\ZZ/4\times\ZZ/3$ y los dos puntos corresponden a los dos factores.
+\end{solucion}
+
+\begin{ejercicio}{El espectro de $\ZZ$ y sus cerrados}
+Describa los puntos y los subconjuntos cerrados de $\Spec\ZZ$. ¿Cuál es la clausura de $(0)$? ¿Cómo son los abiertos?
+\end{ejercicio}
+\begin{solucion}
+Los puntos son $(0)$ y $(p)$ con $p$ primo; estos últimos son los cerrados (maximales). Para $\mathfrak a=(n)$: si $n=0$, $V(0)=\Spec\ZZ$; si $n=\pm1$, $V(1)=\emptyset$; si $|n|\ge2$, $V(n)=\{(p):p\mid n\}$, un conjunto finito de puntos cerrados.
+
+Todo conjunto finito de puntos cerrados es cerrado: $\{(p_1),\dots,(p_r)\}=V(p_1\cdots p_r)$. Luego los cerrados son $\emptyset$, $\Spec\ZZ$ y los subconjuntos finitos de $\{(p)\}$. No existe cerrado propio que contenga a $(0)$, pues $(0)\in V(\mathfrak a)$ obliga a $\mathfrak a=0$.
+
+Por tanto $\overline{\{(0)\}}=\Spec\ZZ$: $(0)$ es el \emph{punto genérico}. Los abiertos no vacíos son los complementos de conjuntos finitos de puntos cerrados; todos contienen a $(0)$, y la topología es la cofinita sobre los puntos cerrados, más el punto genérico.
+\end{solucion}
+
+\begin{ejercicio}{El espectro de $k[x]$}
+Sea $k$ algebraicamente cerrado. Describa $\Spec k[x]$. ¿Qué cambia si $k=\RR$?
+\end{ejercicio}
+\begin{solucion}
+Como $k[x]$ es DIP, los primos son $(0)$ y $(f)$ con $f$ irreducible; para $k$ algebraicamente cerrado los irreducibles son $x-a$. Así
+$$\Spec k[x]=\{(0)\}\cup\{(x-a):a\in k\},$$
+y $a\mapsto(x-a)$ identifica los puntos cerrados con $\A^1(k)=k$. Los cerrados propios son los conjuntos finitos de puntos cerrados ($V(f)$ = raíces de $f$), de nuevo la topología cofinita, con $(0)$ genérico.
+
+Para $k=\RR$ los irreducibles son $x-a$ y los $x^2+bx+c$ con discriminante negativo. Los puntos cerrados son entonces los $(x-a)$ y los $(x^2+bx+c)$; cada punto del segundo tipo representa un par de raíces complejas conjugadas $\{z,\bar z\}$ de $\CC\setminus\RR$.
+\end{solucion}
+
+\begin{ejercicio}{La cruz}
+Sea $k$ algebraicamente cerrado y $A=k[x,y]/(xy)$. Describa $\Spec A$, sus dos componentes y su intersección.
+\end{ejercicio}
+\begin{solucion}
+Los primos de $A$ corresponden a primos de $k[x,y]$ que contienen a $xy$, luego a $x$ o a $y$. Los primos de $k[x,y]$ que contienen a $x$ corresponden a primos de $k[x,y]/(x)\cong k[y]$: son $(x)$ y $\gen{x,y-b}$ con $b\in k$. Análogamente los que contienen a $y$: $(y)$ y $\gen{x-a,y}$. Entonces $\Spec A$ consta de
+\begin{itemize}[itemsep=1pt]
+\item dos puntos genéricos $\eta_1=(\bar x)$ y $\eta_2=(\bar y)$;
+\item los puntos cerrados $P_b=\gen{\bar x,\bar y-b}$ (eje $y$) y $Q_a=\gen{\bar x-a,\bar y}$ (eje $x$), con $P_0=Q_0$ el origen.
+\end{itemize}
+Las componentes son $V(\bar x)=\{\eta_1\}\cup\{P_b\}$ y $V(\bar y)=\{\eta_2\}\cup\{Q_a\}$; cada una es irreducible porque es la clausura de un punto. Su unión es $\Spec A=V(\bar x\bar y)$ y su intersección es $V(\bar x,\bar y)=\{P_0\}$, el origen. En particular $\Spec A$ no es irreducible.
+\end{solucion}
+
+\begin{ejercicio}{Propiedades de $V(\mathfrak a)$}
+Pruebe que $V(\mathfrak a)\cup V(\mathfrak b)=V(\mathfrak a\mathfrak b)$ y $V(\mathfrak a)\cap V(\mathfrak b)=V(\mathfrak a+\mathfrak b)$. Dé un ejemplo en $\Spec\ZZ$.
+\end{ejercicio}
+\begin{solucion}
+Si $\p\supseteq\mathfrak a$ o $\p\supseteq\mathfrak b$, entonces $\p\supseteq\mathfrak a\mathfrak b$. Recíprocamente, si $\p\supseteq\mathfrak a\mathfrak b$ y $\p$ es primo, entonces $\p\supseteq\mathfrak a$ o $\p\supseteq\mathfrak b$: si existiera $a\in\mathfrak a\setminus\p$ y $b\in\mathfrak b\setminus\p$, tendríamos $ab\in\mathfrak a\mathfrak b\subseteq\p$, absurdo.
+
+$\p\supseteq\mathfrak a$ y $\p\supseteq\mathfrak b$ si y solo si $\p\supseteq\mathfrak a+\mathfrak b$, pues $\mathfrak a+\mathfrak b$ es el menor ideal que contiene a ambos.
+
+Ejemplo: $V(6)=V(2)\cup V(3)=\{(2),(3)\}$ y $V(2)\cap V(3)=V((2)+(3))=V(1)=\emptyset$.
+\end{solucion}
+
+\begin{ejercicio}{Una familia infinita de puntos cerrados es densa}
+En $\Spec\CC[x]$ sea $Y=\{(x-n):n\in\ZZ\}$. Calcule $I(Y)$ y $\overline Y$.
+\end{ejercicio}
+\begin{solucion}
+$I(Y)=\bigcap_{n}(x-n)=\{f\in\CC[x]:f(n)=0\ \forall n\in\ZZ\}$. Un polinomio no nulo tiene finitas raíces, y $f$ tendría infinitas, luego $f=0$: $I(Y)=(0)$.
+
+Entonces $\overline Y=V(I(Y))=V(0)=\Spec\CC[x]$, que contiene al punto genérico $(0)$. Un conjunto infinito de puntos cerrados es denso, como en la topología cofinita.
+\end{solucion}
+
+\begin{ejercicio}{Dimensión de Krull}
+Calcule (o acote) la dimensión de $\Spec A$ para $A=\ZZ$, $k[x]/(x^2)$, $k[x,y]$ y $k[x,y]/(xy)$.
+\end{ejercicio}
+\begin{solucion}
+La dimensión es el supremo de las longitudes $r$ de cadenas $\p_0\subsetneq\cdots\subsetneq\p_r$ de primos.
+
+$\ZZ$: cadena $(0)\subsetneq(p)$ de longitud $1$; los primos no nulos son maximales (DIP), luego no hay cadenas más largas. $\dim=1$.
+
+$k[x]/(x^2)$: un solo primo. $\dim=0$.
+
+$k[x,y]$: la cadena $(0)\subsetneq(x)\subsetneq\gen{x,y}$ (los cocientes son $k[x,y]$, $k[y]$ y $k$, todos dominios) tiene longitud $2$, así que $\dim\ge2$; el teorema $\dim k[x_1,\dots,x_n]=n$ da la igualdad: $\dim=2$.
+
+$k[x,y]/(xy)$ ($k$ algebraicamente cerrado): del Ejercicio 4, las cadenas son $\eta_1\subsetneq P_b$ o $\eta_2\subsetneq Q_a$ ($\eta_i$ es minimal y los $P_b,Q_a$ son maximales). $\dim=1$.
+\end{solucion}
+
+\begin{ejercicio}{Abiertos básicos}
+Pruebe que (a) $D(f)\cap D(g)=D(fg)$, (b) $D(f)=\emptyset\iff f$ es nilpotente, (c) $D(f)=\Spec A\iff f$ es una unidad. Describa $D(6)\subset\Spec\ZZ$.
+\end{ejercicio}
+\begin{solucion}
+(a) Como $\p$ es primo, $fg\notin\p\iff f\notin\p$ y $g\notin\p$.
+
+(b) $D(f)=\emptyset$ significa que $f$ está en todo primo, es decir $f\in\bigcap\p=\nil(A)$, o sea $f$ es nilpotente.
+
+(c) Si $D(f)=\Spec A$, ningún primo contiene a $f$. Si $f$ no fuera unidad, $(f)$ sería propio y estaría contenido en un maximal, que es primo y contendría a $f$: contradicción. Recíprocamente una unidad no está en ningún ideal propio.
+
+$D(6)=\{(0)\}\cup\{(p):p\ne2,3\}=\Spec\ZZ\setminus\{(2),(3)\}$.
+\end{solucion}
+
+\begin{ejercicio}{$\Spec A$ es cuasi-compacto}
+Pruebe que todo recubrimiento de $\Spec A$ por abiertos tiene un subrecubrimiento finito. Ejemplo: $\Spec\ZZ=D(2)\cup D(3)$.
+\end{ejercicio}
+\begin{solucion}
+Los $D(f)$ forman una base (todo abierto es $\Spec A\setminus V(\mathfrak a)=\bigcup_{f\in\mathfrak a}D(f)$), así que basta ver que todo recubrimiento $\Spec A=\bigcup_{i}D(f_i)$ tiene subrecubrimiento finito; luego cada $D(f_i)$ se contiene en un abierto del recubrimiento original. Si los $D(f_i)$ recubren, ningún primo contiene al ideal $\gen{f_i:i}$, así que este ideal es $A$ (de lo contrario estaría en un maximal). Entonces $1=\sum_{j=1}^ra_jf_{i_j}$ (suma finita) y el ideal $\gen{f_{i_1},\dots,f_{i_r}}=A$, por lo que los $D(f_{i_j})$ recubren.
+
+Ejemplo: $\gen{2,3}=\ZZ$ (pues $3-2=1$), luego $D(2)\cup D(3)=\Spec\ZZ$: todo primo $p$ no puede dividir a la vez a $2$ y a $3$.
+\end{solucion}
+
+\begin{ejercicio}{Un abierto que no es cuasi-compacto}
+Sea $A=k[x_1,x_2,\dots]$ (infinitas variables) y $\mathfrak a=\gen{x_1,x_2,\dots}$. Pruebe que el abierto $U=\Spec A\setminus V(\mathfrak a)$ no es cuasi-compacto.
+\end{ejercicio}
+\begin{solucion}
+$U=\bigcup_{i\ge1}D(x_i)$. Sea $\p_n=\gen{x_1,\dots,x_n}$; es primo, pues $A/\p_n\cong k[x_{n+1},x_{n+2},\dots]$ es un dominio. Como $x_{n+1}\notin\p_n$, se tiene $\p_n\in D(x_{n+1})\subseteq U$, pero $\p_n\notin D(x_i)$ para $i\le n$ (porque $x_i\in\p_n$).
+
+Si hubiera un subrecubrimiento finito $D(x_{i_1})\cup\dots\cup D(x_{i_r})$ de $U$, sea $N=\max i_j$. Entonces $\p_N\in U$ pero $x_{i_j}\in\p_N$ para todo $j$, es decir $\p_N$ no está en ninguno de los abiertos del subrecubrimiento. Contradicción. (Esto muestra que el Ejercicio 9 no se extiende a abiertos arbitrarios; en un anillo noetheriano todo abierto sí es cuasi-compacto.)
+\end{solucion}
+
+\begin{ejercicio}{Fibras de $\Spec\ZZ[i]\to\Spec\ZZ$}
+Describa las fibras de $\varphi^*:\Spec\ZZ[i]\to\Spec\ZZ$ sobre $(2)$, $(3)$ y $(5)$.
+\end{ejercicio}
+\begin{solucion}
+Para $p$ primo, un primo $\q$ de $\ZZ[i]$ cumple $\varphi^*(\q)=(p)$ si y solo si $\q\cap\ZZ=(p)$. Si $\q\supseteq(p)\ZZ[i]$ entonces $\q\cap\ZZ\supseteq(p)$ y es propio, así que $\q\cap\ZZ=(p)$ por maximalidad de $(p)$. Luego la fibra sobre $(p)$ es $V(p)=\Spec\ZZ[i]/(p)=\Spec\FF_p[x]/(x^2+1)$.
+
+\emph{Sobre $(2)$:} $\FF_2[x]/(x^2+1)=\FF_2[x]/(x+1)^2$ tiene un solo primo, $(x+1)\leftrightarrow(1+i)$. Un punto (\emph{ramificado}).
+
+\emph{Sobre $(3)$:} $x^2+1$ es irreducible mod $3$ (no tiene raíces: $0,1,2\mapsto1,2,2$), el cociente es el cuerpo $\FF_9$. Un punto, $(3)$ (\emph{inerte}).
+
+\emph{Sobre $(5)$:} $x^2+1=(x-2)(x+2)$ en $\FF_5[x]$ con factores coprimos, el cociente es $\FF_5\times\FF_5$. Dos puntos, $(2+i)$ y $(2-i)$ (\emph{descompuesto}); en efecto $5=(2+i)(2-i)$.
+
+Sobre $(0)$ hay un solo punto, $(0)$.
+\end{solucion}
+
+\begin{ejercicio}{Una biyección que no es isomorfismo}
+Sea $k$ algebraicamente cerrado de característica $\ne2$, $\varphi:A=k[t^2,t^3]\hookrightarrow k[t]$. Pruebe que $\varphi^*:\Spec k[t]\to\Spec A$ es biyectiva y, sin embargo, $\varphi$ no es un isomorfismo.
+\end{ejercicio}
+\begin{solucion}
+\emph{Genérico:} $\varphi^*((0))=(0)\cap A=(0)$.
+
+\emph{Cerrados, inyectividad:} $\varphi^*((t-a))=\m_a=\{f\in A:f(a)=0\}$. Si $\m_a=\m_b$, como $t^2-a^2,\,t^3-a^3\in\m_a$, se tiene $b^2=a^2$ y $b^3=a^3$. De $b=\pm a$: si $b=-a$, entonces $-a^3=a^3$, luego $a=0=b$ (car $\ne2$). Así $b=a$.
+
+\emph{Cerrados, sobreyectividad:} un maximal $\m\subset A$ tiene $A/\m=k$ (Nullstellensatz); sean $\alpha,\beta$ las imágenes de $t^2,t^3$. Como $(t^3)^2=(t^2)^3$, $\beta^2=\alpha^3$. Elegimos $a$ con $a^2=\alpha$; entonces $a^6=\beta^2$ y $a^3=\pm\beta$. Si $a^3=-\beta$ cambiamos $a$ por $-a$. Así $\m=\m_a$.
+
+Luego $\varphi^*$ es biyectiva. (Además es homeomorfismo: ambos espacios son de dimensión $1$ y noetherianos, con cerrados propios los conjuntos finitos de puntos cerrados.) Sin embargo $\varphi$ no es sobreyectivo ($t\notin A$), luego no es un isomorfismo. Geométricamente es la normalización de la cúspide $y^2=x^3$ y $A$ no es íntegramente cerrado: el espacio de puntos no distingue la singularidad, el anillo sí.
+\end{solucion}
+
+\begin{ejercicio}{Localización: $\Spec\ZZ[1/6]$ y $\Spec k[x,x^{-1}]$}
+Describa $\Spec\ZZ[1/6]$ y $\Spec k[x]_x$ como abiertos.
+\end{ejercicio}
+\begin{solucion}
+$\ZZ[1/6]=S^{-1}\ZZ$ con $S=\{6^n\}$. Sus primos son los $S^{-1}\p$ con $\p\cap S=\emptyset$, es decir con $\p\not\ni 2,3$: son $(0)$ y $(p)$ con $p\ne2,3$. Esto es exactamente $D(6)\subset\Spec\ZZ$ (Ejercicio 8): $\Spec\ZZ[1/6]\cong D(6)$, con la topología inducida. Por ejemplo, $\ZZ[1/6]/(5)\cong\FF_5$, así que $(5)$ sigue siendo maximal.
+
+$k[x]_x=k[x,x^{-1}]$: los primos de $k[x]$ que no contienen a $x$ son $(0)$ y $(f)$ con $f$ irreducible distinto de $x$. Luego $\Spec k[x,x^{-1}]=D(x)=\A^1\setminus\{0\}$; para $k$ algebraicamente cerrado los puntos cerrados son $(x-a)$, $a\neq0$.
+\end{solucion}
+
+\begin{ejercicio}{Un anillo local}
+Describa $\Spec\ZZ_{(p)}$ con su topología, y su dimensión.
+\end{ejercicio}
+\begin{solucion}
+$\ZZ_{(p)}=S^{-1}\ZZ$ con $S=\ZZ\setminus(p)$. Sus primos corresponden a los primos de $\ZZ$ disjuntos de $S$, es decir contenidos en $(p)$: $(0)$ y $(p)$. Dos puntos: $\m=p\ZZ_{(p)}$ (cerrado, el único maximal, de ahí \emph{anillo local}) y $(0)$ (genérico).
+
+Los cerrados son $\emptyset$, $\{\m\}$ y todo el espacio; los abiertos, $\emptyset$, $\{(0)\}$ y todo: es el \emph{espacio de Sierpiński}. La cadena $(0)\subsetneq\m$ da $\dim=1$. Geométricamente es un germen de $\Spec\ZZ$ en el punto $(p)$ y su punto genérico.
+\end{solucion}
+
+\begin{ejercicio}{Irreducibilidad de $V(\mathfrak a)$}
+Pruebe que $V(\mathfrak a)\ne\emptyset$ es irreducible $\iff\sqrt{\mathfrak a}$ es primo. Aplíquelo a $\Spec k[x,y]/(x^2)$, $\Spec\ZZ/6$ y $\Spec k[x,y]/(xy)$.
+\end{ejercicio}
+\begin{solucion}
+($\Leftarrow$) Si $\sqrt{\mathfrak a}=\p$ es primo, $V(\mathfrak a)=V(\p)=\overline{\{\p\}}$. Si $V(\p)=C_1\cup C_2$ con $C_i$ cerrados, $\p$ está en uno, digamos $C_1$, y entonces $\overline{\{\p\}}\subseteq C_1$, o sea $C_1=V(\p)$.
+
+($\Rightarrow$) Sea $V(\mathfrak a)$ irreducible y $fg\in\sqrt{\mathfrak a}$. Todo primo $\p\supseteq\mathfrak a$ contiene a $\sqrt{\mathfrak a}$, luego a $f$ o a $g$:
+$$V(\mathfrak a)=(V(\mathfrak a)\cap V(f))\cup(V(\mathfrak a)\cap V(g)).$$
+Por irreducibilidad $V(\mathfrak a)\subseteq V(f)$, digamos; entonces $f$ está en todo primo que contiene a $\mathfrak a$, es decir $f\in\sqrt{\mathfrak a}$. Además $\sqrt{\mathfrak a}\ne A$ porque $V(\mathfrak a)\ne\emptyset$.
+
+Aplicaciones (con $\mathfrak a=0$, es decir, $\Spec A$ irreducible $\iff\nil(A)$ primo):
+\begin{itemize}[itemsep=1pt]
+\item $A=k[x,y]/(x^2)$: $\nil(A)=(\bar x)$ y $A/(\bar x)\cong k[y]$ es dominio: irreducible (un punto genérico, aunque el anillo no es reducido).
+\item $A=\ZZ/6$: $\nil(A)=0$ y $A$ no es dominio: no irreducible (dos puntos discretos).
+\item $A=k[x,y]/(xy)$: $\nil(A)=0$ y $A$ no es dominio: no irreducible (Ejercicio 4).
+\end{itemize}
+\end{solucion}
+
+\begin{ejercicio}{Idempotentes y desconexión}
+Pruebe que si $e\in A$ es idempotente ($e^2=e$) con $e\ne0,1$, entonces $\Spec A=D(e)\sqcup D(1-e)$ es unión disjunta de dos abiertos no vacíos. Aplíquelo a $\ZZ/6$ y a $k[x]/(x(x-1))$.
+\end{ejercicio}
+\begin{solucion}
+$D(e)\cap D(1-e)=D(e(1-e))=D(e-e^2)=D(0)=\emptyset$ (Ejercicio 8). $D(e)\cup D(1-e)=\Spec A$, pues un primo que no estuviera en ninguno contendría a $e$ y a $1-e$, luego a $1$. Son no vacíos porque $e$ y $1-e$ no son nilpotentes: si $e^n=0$ y $e^n=e$ ($e$ idempotente), $e=0$; análogamente $1-e\ne0$ es idempotente. Como además son complementarios de cerrados, ambos son abiertos y cerrados: $\Spec A$ no es conexo.
+
+$\ZZ/6$: $e=\bar3$ cumple $\bar3^2=\bar9=\bar3$ y $1-e=\bar{-2}=\bar4$. Los primos de $\ZZ/6$ son $(\bar2)$ y $(\bar3)$. Como $\bar3\in(\bar3)$ y $\bar3\notin(\bar2)$, $D(\bar3)=\{(\bar2)\}$; como $\bar4\in(\bar2)$ y $\bar4\notin(\bar3)$, $D(\bar4)=\{(\bar3)\}$. Los dos puntos quedan separados.\par
+
+$k[x]/(x(x-1))$: $e=\bar x$ cumple $x^2=x+x(x-1)\equiv x$, luego es idempotente, $\ne0,1$. Por el teorema chino ($(x)+(x-1)=A$), $A\cong k\times k$, y $\Spec A$ son dos puntos $\{(\bar x),(\overline{x-1})\}$, correspondientes a las raíces $0$ y $1$.
+\end{solucion}
+
+\begin{ejercicio}{$\Proj k[x,y]=\PP^1$}
+Sea $k$ algebraicamente cerrado y $S=k[x,y]$ con la graduación usual. Describa $\Proj S$ y sus abiertos $D_+(x)$, $D_+(y)$.
+\end{ejercicio}
+\begin{solucion}
+Los primos homogéneos de $S$ son $(0)$, los $(f)$ con $f$ homogéneo irreducible, y $\gen{x,y}=S_+$ (el ideal irrelevante, excluido en $\Proj$). Sobre un cuerpo algebraicamente cerrado, una forma binaria irreducible es lineal, $bx-ay$, y define el punto $[a:b]$. Así $\Proj S=\{(0)\}\cup\{(bx-ay):[a:b]\in\PP^1(k)\}$.
+
+$D_+(x)$: es $\Spec (S_x)_0$, y $(S_x)_0=k[y/x]$. Luego $D_+(x)\cong\Spec k[t]=\A^1$ con $t=y/x$ (puntos $[1:t]$). Análogamente $D_+(y)\cong\Spec k[s]$, $s=x/y$.
+
+Los dos abiertos recubren: un primo homogéneo $\p\not\supseteq S_+$ no contiene a la vez a $x$ e $y$. La intersección $D_+(xy)=\Spec k[t,t^{-1}]$ se pega por $s=1/t$. Esto es $\PP^1$.
+\end{solucion}
+
+\begin{ejercicio}{Una cónica es $\PP^1$}
+Sea $S=k[x,y,z]/(xz-y^2)$ con la graduación usual. Pruebe que $\Proj S\cong\PP^1$ calculando las cartas $D_+(x)$ y $D_+(z)$ y su pegado.
+\end{ejercicio}
+\begin{solucion}
+\emph{Recubrimiento.} Si un primo homogéneo $\p$ contiene a $x$ y a $z$, entonces $y^2=xz\in\p$ y $y\in\p$, es decir $\p\supseteq S_+$. Luego $\Proj S=D_+(x)\cup D_+(z)$.
+
+\emph{Cartas.} $(S_x)_0=k[y/x,\,z/x]/(z/x-(y/x)^2)$; llamando $t=y/x$, la relación da $z/x=t^2$ y el anillo es $k[t]$. Entonces $D_+(x)\cong\Spec k[t]=\A^1$. Análogamente, con $s=y/z$ se tiene $x/z=s^2$ y $D_+(z)\cong\Spec k[s]$.
+
+\emph{Pegado.} En $D_+(x)\cap D_+(z)$, $z/x=t^2$ es invertible, luego $t$ lo es, y
+$$s=\frac yz=\frac{y/x}{z/x}=\frac{t}{t^2}=\frac1t.$$
+El pegado de dos $\A^1$ por $s=1/t$ es $\PP^1$. Equivalentemente, $[u:v]\mapsto[u^2:uv:v^2]$ identifica $\PP^1$ con la cónica $xz=y^2$.
+\end{solucion}
+
+\begin{ejercicio}{Cartas del blow-up del origen de $\A^2$}
+Sea $R=k[x,y][u,v]/(xv-yu)$ graduada por el grado en $u,v$ ($\deg x=\deg y=0$, $\deg u=\deg v=1$). Calcule las cartas $D_+(u)$ y $D_+(v)$ de $\Proj R$ y la aplicación a $\A^2$.
+\end{ejercicio}
+\begin{solucion}
+Un primo homogéneo que no contenga a $R_+=\gen{u,v}$ no contiene a la vez a $u$ y $v$, así que $\Proj R=D_+(u)\cup D_+(v)$.
+
+$D_+(u)$: $(R_u)_0=k[x,y,v/u]/(x\,(v/u)-y)$. Sea $t=v/u$. La relación dice $y=xt$, luego el anillo es $k[x,t]$, y $D_+(u)\cong\A^2$ con coordenadas $(x,t)$. La inclusión $k[x,y]\to k[x,t]$ es $y\mapsto xt$, es decir
+$$\pi:(x,t)\longmapsto(x,xt).$$
+
+$D_+(v)$: con $s=u/v$ la relación da $x=ys$, y $(R_v)_0=k[y,s]$ con $\pi:(y,s)\mapsto(ys,y)$.
+
+En la intersección $D_+(uv)$: $t=1/s$. Entonces $\Proj R=\mathrm{Bl}_0\A^2$, el blow-up del origen, y $R=\bigoplus_nI^nt^n$ con $I=\gen{x,y}$ es el álgebra de Rees (identificando $u=xt$, $v=yt$).
+\end{solucion}
+
+\begin{ejercicio}{Imagen inversa por el blow-up y transformada estricta}
+Con la carta $\pi:(x,t)\mapsto(x,xt)$ del ejercicio anterior (es decir $\varphi:k[x,y]\to k[x,t]$, $y\mapsto xt$), calcule $(\varphi^*)^{-1}$ del origen, de la recta $V(y)$, y pruebe que $\pi$ es un isomorfismo fuera del divisor excepcional.
+\end{ejercicio}
+\begin{solucion}
+Por $(\varphi^*)^{-1}(V(\mathfrak a))=V(\varphi(\mathfrak a)B)$ con $B=k[x,t]$:
+
+\emph{Origen} $V(x,y)$: $V(\varphi(x),\varphi(y))=V(x,xt)=V(x)$, la recta $E=\{x=0\}$ con coordenada $t$. Es el \emph{divisor excepcional} (en esta carta $E\cong\A^1$, y en el total $E\cong\PP^1$).
+
+\emph{Recta $V(y)$:} $V(xt)=V(x)\cup V(t)=E\cup\{t=0\}$. La componente $\{t=0\}$ es la \emph{transformada estricta} del eje $x$; el total $E+\{t=0\}$ es la transformada total.
+
+\emph{Isomorfismo fuera de $E$:} $(\varphi^*)^{-1}(D(x))=D(\varphi(x))=D(x)\subseteq\Spec B$. El homomorfismo $\varphi_x:k[x,y]_x\to k[x,t]_x$ es un isomorfismo, con inverso $t\mapsto y/x$ (el elemento $y/x$ está en $k[x,y]_x$). Luego $\pi$ restringe a un isomorfismo $\{x\ne0\}\to\{x\ne0\}$. Haciendo lo mismo en la otra carta con $D(y)$, se concluye que $\pi$ es un isomorfismo $\mathrm{Bl}_0\A^2\setminus E\xrightarrow{\ \sim\ }\A^2\setminus\{0\}$.
+\end{solucion}
+
+\section*{Cuadro resumen}
+
+\begin{center}
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+Anillo & $\Spec$ & Observación \\
+\midrule
+$k$ & un punto & \\
+$k[x]/(x^2)$ & un punto & no reducido \\
+$\ZZ/12$ & dos puntos discretos & $\ZZ/4\times\ZZ/3$ \\
+$\ZZ$ & $(0)$ genérico, $(p)$ cerrados & topología cofinita \\
+$k[x]$ ($k=\bar k$) & $(0)$ y $(x-a)$ & $\A^1$ \\
+$k[x,y]/(xy)$ & dos rectas que se cortan & reducible \\
+$\ZZ[1/6]$ & $D(6)\subset\Spec\ZZ$ & abierto \\
+$\ZZ_{(p)}$ & $\{(0),(p)\}$ & Sierpiński, local \\
+$k[t^2,t^3]$ & $\cong\Spec k[t]$ como conjunto & cúspide \\
+$\Proj k[x,y]$ & $\PP^1$ & dos cartas $\A^1$ \\
+$\Proj R(\gen{x,y})$ & $\mathrm{Bl}_0\A^2$ & divisor $E\cong\PP^1$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\end{document}
