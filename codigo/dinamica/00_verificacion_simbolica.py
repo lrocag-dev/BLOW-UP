@@ -209,4 +209,18 @@ if __name__ == "__main__":
     sobre = sp.expand(Xz3.subs(xi, 0))
     print(f"    sobre xi = 0:  zeta' = {sobre} + ...")
     comprobar(sp.expand(sobre - zeta**3 / 2) == 0, "zeta' = zeta^3/2 sobre xi = 0")
+    # ---------- (d) pliegues para Q = 2 ----------
+    print("\n(d) Pliegues de f para Q = 2 (régimen lento-rápido):")
+    f2 = f.subs(Q, 2)
+    ceros = sp.solve(sp.diff(f2, x), x)
+    esperados = {-sp.Rational(1, 2), (-1 + sp.sqrt(5)) / 2, (-1 - sp.sqrt(5)) / 2}
+    comprobar({sp.simplify(c) for c in ceros} == esperados, f"ceros de f' (Q=2): {ceros} = {{-1/2, (-1±√5)/2}}")
+    comprobar(sp.discriminant(sp.diff(f2, x), x) != 0, "los tres ceros de f' son simples (discriminante no nulo)")
+    comprobar([sp.simplify(f2.subs(x, c)) for c in [-sp.Rational(1, 2), (-1 + sp.sqrt(5)) / 2, (-1 - sp.sqrt(5)) / 2]]
+              == [-sp.Rational(9, 16), 1, 1], "f en los pliegues: -9/16, 1, 1")
+    Phi2 = (x / (x + Q) - R * f).subs(Q, 2)
+    Sc = [sp.simplify(Phi2.subs(x, c)) for c in [-sp.Rational(1, 2), (-1 + sp.sqrt(5)) / 2, (-1 - sp.sqrt(5)) / 2]]
+    comprobar(sp.simplify(Sc[0] - (9 * R / 16 - sp.Rational(1, 3))) == 0, "S_c(-1/2) = 9R/16 - 1/3")
+    comprobar(sp.simplify(Sc[1] - (sp.sqrt(5) - 2 - R)) == 0, "S_c((-1+√5)/2) = √5 - 2 - R")
+    comprobar(sp.simplify(Sc[2] - (-2 - sp.sqrt(5) - R)) == 0, "S_c((-1-√5)/2) = -2 - √5 - R < 0")
     print("\nOK: verificación simbólica del sistema completada.")

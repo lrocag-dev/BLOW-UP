@@ -51,14 +51,20 @@ def jacobiana(x, y, P, Q, R, S):
 
 # ---- cartas del blow-up del origen ----
 def campo_carta1(t, s, P, Q, R, S):
-    """x = r, y = r v:   r' = r((1-r^2)(r+Q) - v)/2,  v' = v[P g(r,rv) - ((1-r^2)(r+Q) - v)/2]."""
+    """Carta 1: x = r, y = r v  (a = (1-r^2)(r+Q) - v).
+
+    r' = r a / 2,   v' = v [P g(r, r v) - a / 2]
+    """
     r, v = s
     a = (1.0 - r**2) * (r + Q) - v
     return [0.5 * r * a, v * (P * g(r, r * v, Q, R, S) - 0.5 * a)]
 
 
 def campo_carta2(t, s, P, Q, R, S):
-    """y = r, x = r u:   r' = P r g(ru, r),  u' = (f(ru)/r - 1)/2 - u P g(ru, r)."""
+    """Carta 2: y = r, x = r u.
+
+    r' = P r g(r u, r),   u' = (f(r u)/r - 1)/2 - u P g(r u, r)
+    """
     r, u = s
     gg = g(r * u, r, Q, R, S)
     return [P * r * gg, 0.5 * (u * (1.0 - (r * u) ** 2) * (r * u + Q) - 1.0) - u * P * gg]

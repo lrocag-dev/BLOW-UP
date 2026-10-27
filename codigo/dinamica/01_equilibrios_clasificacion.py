@@ -133,20 +133,24 @@ if __name__ == "__main__":
     assert abs(np.linalg.det(J)) < 1e-12 and abs(np.trace(J)) < 1e-12 and np.abs(J).max() > 0.1
     # Fragmento LaTeX con la tabla (lo incluye el apéndice con \\input, así los valores coinciden)
     params = {n: (P, Q, R, S) for n, P, Q, R, S in todos}
+    # El fragmento NO termina en \\ (lo añade el documento antes de \\bottomrule).
+    lineas = []
+    previo = None
+    for (nombre, x0, y0, lam, tipo, hip, lugar) in filas_tex:
+        if nombre != previo:
+            if previo is not None:
+                lineas.append("\\midrule")
+            P_, Q_, R_, S_ = params[nombre]
+            lineas.append(f"\\emph{{Conjunto {nombre}}} & \\multicolumn{{3}}{{l}}{{$P={P_:.4f},\\ Q={Q_:g},\\ R={R_:g},\\ S={S_:.4f}$}} \\\\")
+            previo = nombre
+        if abs(lam[0].imag) > 1e-12:
+            ls = f"${lam[0].real:+.4f}\\pm{abs(lam[0].imag):.4f}\\,i$"
+        else:
+            ls = "$" + ",\\ ".join(f"{l.real:+.4f}" for l in lam) + "$"
+        marca = "" if hip else "\\ \\ensuremath{{}^{\\dagger}}"
+        lineas.append(f"\\quad & $({x0:.4f},\\ {y0:.4f})$ & {ls} & {tipo.split(' (')[0]}{marca} \\\\")
+    lineas[-1] = lineas[-1][:-3].rstrip()
     with open(SALIDA / "tabla_equilibrios.tex", "w", encoding="utf-8") as fh:
-        previo = None
-        for (nombre, x0, y0, lam, tipo, hip, lugar) in filas_tex:
-            if nombre != previo:
-                if previo is not None:
-                    fh.write("\\midrule\n")
-                P_, Q_, R_, S_ = params[nombre]
-                fh.write(f"\\multicolumn{{4}}{{@{{}}l}}{{\\emph{{Conjunto {nombre}}}: $P={P_:.4f},\\ Q={Q_:g},\\ R={R_:g},\\ S={S_:.4f}$}} \\\\\n")
-                previo = nombre
-            if abs(lam[0].imag) > 1e-12:
-                ls = f"${lam[0].real:+.4f}\\pm{abs(lam[0].imag):.4f}\\,i$"
-            else:
-                ls = "$" + ",\\ ".join(f"{l.real:+.4f}" for l in lam) + "$"
-            marca = "" if hip else "\\ \\ensuremath{{}^{\\dagger}}"
-            fh.write(f"\\quad & $({x0:.4f},\\ {y0:.4f})$ & {ls} & {tipo.split(' (')[0]}{marca} \\\\\n")
+        fh.write("\n".join(lineas) + "\n")
     print(f"Fragmento LaTeX escrito en {SALIDA / 'tabla_equilibrios.tex'}")
     print("OK: equilibrios, jacobianos y clasificación calculados; contrastes superados.")
