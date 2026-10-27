@@ -1,0 +1,440 @@
+# Registro de ejecución (generado por codigo/ejecutar_todo.sh)
+# Python 3.13.17; matplotlib==3.11.2 mpmath==1.3.0 numpy==2.5.4 scipy==1.18.1 sympy==1.14.0 
+
+################ simbolico/01_nucleo_cuspide.py ################
+
+========================================================================
+a) Núcleo de phi: x -> t^2, y -> t^3
+========================================================================
+  [OK] phi(y^2 - x^3) = t^6 - t^6 = 0
+  Base de Gröbner lex (t>x>y) sobre Q: [t**2 - x, t*x - y, t*y - x**2, x**3 - y**2]
+  Parte sin t (ideal de eliminación):      [x**3 - y**2]
+  [OK] el ideal de eliminación sobre Q tiene un único generador
+  [OK] ker(phi) = (y^2 - x^3) sobre Q
+  Base de Gröbner lex (t>x>y) sobre F_2: [t**2 + x, t*x + y, t*y + x**2, x**3 + y**2]
+  Parte sin t (ideal de eliminación):      [x**3 + y**2]
+  [OK] el ideal de eliminación sobre F_2 tiene un único generador
+  [OK] ker(phi) = (y^2 - x^3) sobre F_2
+  Base de Gröbner lex (t>x>y) sobre F_3: [t**2 - x, t*x - y, t*y - x**2, x**3 - y**2]
+  Parte sin t (ideal de eliminación):      [x**3 - y**2]
+  [OK] el ideal de eliminación sobre F_3 tiene un único generador
+  [OK] ker(phi) = (y^2 - x^3) sobre F_3
+  Base de Gröbner lex (t>x>y) sobre F_5: [t**2 - x, t*x - y, t*y - x**2, x**3 - y**2]
+  Parte sin t (ideal de eliminación):      [x**3 - y**2]
+  [OK] el ideal de eliminación sobre F_5 tiene un único generador
+  [OK] ker(phi) = (y^2 - x^3) sobre F_5
+  Base de Gröbner lex (t>x>y) sobre F_7: [t**2 - x, t*x - y, t*y - x**2, x**3 - y**2]
+  Parte sin t (ideal de eliminación):      [x**3 - y**2]
+  [OK] el ideal de eliminación sobre F_7 tiene un único generador
+  [OK] ker(phi) = (y^2 - x^3) sobre F_7
+  Base de Gröbner lex (t>x>y) sobre F_101: [t**2 - x, t*x - y, t*y - x**2, x**3 - y**2]
+  Parte sin t (ideal de eliminación):      [x**3 - y**2]
+  [OK] el ideal de eliminación sobre F_101 tiene un único generador
+  [OK] ker(phi) = (y^2 - x^3) sobre F_101
+
+OK: ker(phi) = (y^2 - x^3) en todos los cuerpos probados.
+[código de salida 0] simbolico/01_nucleo_cuspide.py
+
+################ simbolico/02_potencias_maximal.py ################
+
+========================================================================
+b) Potencias de I = (x,y) y dimensiones de cocientes
+========================================================================
+ n | #gen I^n | dim k[x,y]/I^n | n(n+1)/2 | dim B/m^n |  2n-1
+--------------------------------------------------------------
+ 1 |        2 |              1 |        1 |         1 |     1
+ 2 |        3 |              3 |        3 |         3 |     3
+ 3 |        4 |              6 |        6 |         5 |     5
+ 4 |        5 |             10 |       10 |         7 |     7
+ 5 |        6 |             15 |       15 |         9 |     9
+ 6 |        7 |             21 |       21 |        11 |    11
+ 7 |        8 |             28 |       28 |        13 |    13
+ 8 |        9 |             36 |       36 |        15 |    15
+  [OK] n=1..8: #gen(I^n)=n+1, dim k[x,y]/I^n=n(n+1)/2, dim B/m^n=2n-1 (sobre Q, F_2, F_3, F_101)
+[código de salida 0] simbolico/02_potencias_maximal.py
+
+################ simbolico/03_funcion_hilbert.py ################
+
+========================================================================
+c) Función de Hilbert de gr_m(B)
+========================================================================
+curva                               m  H(0..9)
+------------------------------------------------------------------------
+cúspide y^2 = x^3                   2  [1, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+nodo y^2 = x^2 (x+1)                2  [1, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+A_1: y^2 = x^2                      2  [1, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+A_2: y^2 = x^3                      2  [1, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+A_3: y^2 = x^4                      2  [1, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+A_4: y^2 = x^5                      2  [1, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+A_5: y^2 = x^6                      2  [1, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+punto triple ordinario xy(x+y)      3  [1, 2, 3, 3, 3, 3, 3, 3, 3, 3]
+y^3 = x^4                           3  [1, 2, 3, 3, 3, 3, 3, 3, 3, 3]
+y^3 = x^5                           3  [1, 2, 3, 3, 3, 3, 3, 3, 3, 3]
+  [OK] cúspide: H = 1,2,2,2,...
+  [OK] nodo: H = 1,2,2,2,... (m = 2)
+  [OK] A_1: H = 1,2,2,2,...
+  [OK] A_2: H = 1,2,2,2,...
+  [OK] A_3: H = 1,2,2,2,...
+  [OK] A_4: H = 1,2,2,2,...
+  [OK] A_5: H = 1,2,2,2,...
+  [OK] H(gr_m B)(j) = min(j+1, m) y coincide con k[x,y]/(f_m) en todos los ejemplos
+[código de salida 0] simbolico/03_funcion_hilbert.py
+
+################ simbolico/04_cartas_blowup.py ################
+
+========================================================================
+d) Cartas del blow-up del origen de A^2
+========================================================================
+
+--- cúspide  y^2 = x^3 ---
+  [OK] multiplicidad m = 2 (esperada 2); forma inicial f_m = y**2
+  carta (x,t), y = x t:  total = t**2*x**2 - x**3 = x^2 * (t**2 - x)
+  [OK] pi^*C = C~ + m E en la carta y = x t
+  [OK] x no divide a la transformada estricta (E no es componente de C~)
+  [OK] f~(x,t) = f_m(1,t) + x f_{m+1}(1,t) + ...
+  [OK] C~ ∩ E = {f_m(1,t) = 0}
+  C~ ∩ E en la carta 1: t ∈ {0: 2}; multiplicidad en t=∞: 0
+  [OK] (C~·E) = suma de multiplicidades = 2 = m
+  puntos singulares de C~ en la carta 1: ninguno (C~ lisa)
+  carta (y,s), x = y s:  total = -s**3*y**3 + y**2 = y^2 * (-s**3*y + 1)
+  [OK] pi^*C = C~ + m E en la carta x = y s
+     C~ ∩ E en la carta 2: 1 = 0
+  [OK] en la carta x = y s: C~ ∩ E = {f_m(s,1) = 0}
+  [OK] C~ es lisa en la carta 1
+
+--- nodo  y^2 = x^2 (x+1) ---
+  [OK] multiplicidad m = 2 (esperada 2); forma inicial f_m = -x**2 + y**2
+  carta (x,t), y = x t:  total = t**2*x**2 - x**3 - x**2 = x^2 * (t**2 - x - 1)
+  [OK] pi^*C = C~ + m E en la carta y = x t
+  [OK] x no divide a la transformada estricta (E no es componente de C~)
+  [OK] f~(x,t) = f_m(1,t) + x f_{m+1}(1,t) + ...
+  [OK] C~ ∩ E = {f_m(1,t) = 0}
+  C~ ∩ E en la carta 1: t ∈ {-1: 1, 1: 1}; multiplicidad en t=∞: 0
+  [OK] (C~·E) = suma de multiplicidades = 2 = m
+  puntos singulares de C~ en la carta 1: ninguno (C~ lisa)
+  carta (y,s), x = y s:  total = -s**3*y**3 - s**2*y**2 + y**2 = y^2 * (-s**3*y - s**2 + 1)
+  [OK] pi^*C = C~ + m E en la carta x = y s
+     C~ ∩ E en la carta 2: 1 - s**2 = 0
+  [OK] en la carta x = y s: C~ ∩ E = {f_m(s,1) = 0}
+  [OK] C~ es lisa en la carta 1
+
+--- tacnodo  y^2 = x^4 ---
+  [OK] multiplicidad m = 2 (esperada 2); forma inicial f_m = y**2
+  carta (x,t), y = x t:  total = t**2*x**2 - x**4 = x^2 * (t**2 - x**2)
+  [OK] pi^*C = C~ + m E en la carta y = x t
+  [OK] x no divide a la transformada estricta (E no es componente de C~)
+  [OK] f~(x,t) = f_m(1,t) + x f_{m+1}(1,t) + ...
+  [OK] C~ ∩ E = {f_m(1,t) = 0}
+  C~ ∩ E en la carta 1: t ∈ {0: 2}; multiplicidad en t=∞: 0
+  [OK] (C~·E) = suma de multiplicidades = 2 = m
+  puntos singulares de C~ en la carta 1: [x, t]
+  carta (y,s), x = y s:  total = -s**4*y**4 + y**2 = y^2 * (-s**4*y**2 + 1)
+  [OK] pi^*C = C~ + m E en la carta x = y s
+     C~ ∩ E en la carta 2: 1 = 0
+  [OK] en la carta x = y s: C~ ∩ E = {f_m(s,1) = 0}
+  [OK] C~ tiene un único punto singular, (x,t) = (0,0): un nodo (t^2 = x^2)
+  [OK] mult_(0,0)(C~) = 2: segundo blow-up necesario
+
+OK: pi^*C = C~ + m E con m = 2 en los tres ejemplos.
+[código de salida 0] simbolico/04_cartas_blowup.py
+
+################ simbolico/05_resolucion_cuspide.py ################
+
+========================================================================
+e) Resolución embebida de la cúspide y^2 = x^3 (tres blow-ups)
+========================================================================
+
+Paso 1 | carta 1 (y = x t): F = (t**2 - x) * (x)^2
+       | carta 2 (x = y s): F = (-s**3*y + 1) * (y)^2
+  [OK] coeficiente de E1 = mult_0(C) = 2
+  [OK] pi_1^*C = C~ + 2 E1 en ambas cartas
+  [OK] carta (x,t): C~ (t^2 = x) y E1 (x = 0) son tangentes: el divisor NO es SNC
+  [OK] S1B (carta x = y s): divisor SNC (solo E1; C~ no corta a E1 aquí)
+  [OK] q1 = (x,t) = (0,0) está en C~ y en E1 (C~ es lisa y tangente a E1: t^2 = x)
+
+Paso 2 | carta (t,w), x = t w:   F = (t - w) * (w)^2 * (t)^3
+       | carta (x,tau), t = x tau: F = (tau**2*x - 1) * (x)^3
+  [OK] multiplicidades en q1: {'C~': 1, 'E1': 1}
+  [OK] coeficiente de E2 = 1*1 + 2*1 = 3
+  [OK] factorización del transformado total en ambas cartas
+  [OK] S2B (carta t = x tau): divisor SNC
+  [OK] carta (t,w): pasan C~, E1 y E2 por el origen (tres ramas): NO es SNC todavía
+  [OK] carta (t,w): el divisor NO es SNC (tres curvas lisas concurrentes)
+
+Paso 3 | carta (t,s), w = t s:   F = (1 - s) * (s)^2 * (t)^6
+       | carta (w,tau), t = w tau: F = (tau - 1) * (tau)^3 * (w)^6
+  [OK] multiplicidades en q2: {'C~': 1, 'E1': 1, 'E2': 1}
+  [OK] coeficiente de E3 = 1*1 + 2*1 + 3*1 = 6
+  [OK] factorización del transformado total en ambas cartas
+  [OK] pi^*C = C~ + 2 E1 + 3 E2 + 6 E3   (coeficientes calculados: {'C~': 1, 'E1': 2, 'E3': 6, 'E2': 3})
+  [OK] S1B: divisor SNC  [componentes: ['C~', 'E1']]
+  [OK] S2B: divisor SNC  [componentes: ['C~', 'E2']]
+  [OK] S3A: divisor SNC  [componentes: ['C~', 'E1', 'E3']]
+  [OK] S3B: divisor SNC  [componentes: ['C~', 'E2', 'E3']]
+  [OK] autointersecciones {'E1': -3, 'E2': -2, 'E3': -1}
+
+  Intersecciones (puntos, transversales): {('E3', 'E1'): 1, ('E3', 'C~'): 1, ('E1', 'C~'): 0, ('E3', 'E2'): 1, ('E2', 'C~'): 0, ('E1', 'E2'): 0}
+  [OK] grafo dual: E3 corta a C~, E1 y E2 (1 punto cada una); no hay otras intersecciones
+  [OK] pi^*C . E1 = 0  (sumando coef * (componente . E1))
+  [OK] pi^*C . E2 = 0  (sumando coef * (componente . E2))
+  [OK] pi^*C . E3 = 0  (sumando coef * (componente . E3))
+
+Tabla de multiplicidades de la sucesión de blow-ups:
+paso | centro          | m(C~) | m(E1~) | m(E2~) | coef. nuevo E = sum coef*mult
+------------------------------------------------------------------------------
+   1 | (0,0) ∈ A^2     |     2 |      - |      - | 2
+   2 | q1 = C~∩E1      |     1 |      1 |      - | 3
+   3 | q2 = C~∩E1∩E2   |     1 |      1 |      1 | 6
+  [OK] multiplicidades de C~: (2,1,1);  coeficientes de E1,E2,E3: (2,3,6)
+  [OK] delta = sum m_i(m_i-1)/2 = 1
+
+OK: resolución embebida de la cúspide verificada.
+[código de salida 0] simbolico/05_resolucion_cuspide.py
+
+################ simbolico/06_delta.py ################
+
+========================================================================
+f) delta por la fórmula de la monografía y por cálculo directo de dim(Obar/O)
+========================================================================
+curva                            | mult. (sucesión)       | delta fórmula | delta directo | esperado
+------------------------------------------------------------------------------------------------
+A_1: y^2 = x^2                   | [2]                    |             1 |             1 | 1
+A_2: y^2 = x^3                   | [2]                    |             1 |             1 | 1
+A_3: y^2 = x^4                   | [2, 2]                 |             2 |             2 | 2
+A_4: y^2 = x^5                   | [2, 2]                 |             2 |             2 | 2
+A_5: y^2 = x^6                   | [2, 2, 2]              |             3 |             3 | 3
+cúspide y^2 = x^3                | [2]                    |             1 |             1 | 1
+nodo y^2 = x^2 (x+1)             | [2]                    |             1 |             1 | 1
+tacnodo y^2 = x^4                | [2, 2]                 |             2 |             2 | 2
+punto triple ordinario xy(x+y)   | [3]                    |             3 |             3 | 3
+y^3 = x^4  (tipo E_6)            | [3]                    |             3 |             3 | 3
+y^3 = x^5  (tipo E_8)            | [3, 2]                 |             4 |             4 | 4
+  [OK] delta (fórmula recursiva) = delta (dim Obar/O) en todos los ejemplos, estable en N = 12, 16
+  [OK] A_n: delta = ceil(n/2):  1,1,2,2,3 para n=1..5
+[código de salida 0] simbolico/06_delta.py
+
+################ simbolico/07_paraguas_whitney.py ################
+
+========================================================================
+g) Paraguas de Whitney  x^2 = y^2 z
+========================================================================
+  Ideal jacobiano (f, f_x, f_y, f_z): base de Gröbner = [y**2, y*z, x]
+  [OK] J ⊂ (x,y)
+  [OK] x, y^2, y z ∈ J; luego rad(J) ∋ x, y: Sing X = V(x,y) = eje z
+
+  Carta A (x = s y):  f = -y**2*(-s**2 + z)   ->  X~ : s**2 - z = 0,   pi^*X = X~ + 2 E
+  [OK] carta A: transformada estricta  s^2 = z
+  Carta B (y = t x):  f = -x**2*(t**2*z - 1)   ->  X~ : -t**2*z + 1 = 0,   pi^*X = X~ + 2 E
+  [OK] carta B: transformada estricta  1 = t^2 z
+  [OK] carta A: X~ es lisa (gradiente = (2s, 0, -1) nunca se anula)
+  [OK] carta B: X~ es lisa (el ideal (g, grad g) es (1))
+  => la transformada estricta NO tiene singularidades: no queda singularidad que resolver.
+  [OK] X~ y E se cortan transversalmente: pi^*X = X~ + 2E es SNC
+
+  E ∩ X~ en la carta A: y = 0, z = s^2  (parábola); pi(s,0,s^2) = (0,0,s^2) en el eje z.
+  El morfismo X~ -> L es 2:1 (s = ±sqrt(z)) y se ramifica en s = 0.
+  [OK] E∩X~ -> L es de grado 2, ramificado solo en z = 0
+  Jacobiana de pi|X~ en la carta A: [[y, s], [0, 1], [2*s, 0]], menores 2x2: [y, -2*s**2, -2*s]
+  [OK] pi|X~ deja de ser inmersión exactamente en (s,y) = (0,0): el punto pinzado, imagen (0,0,0)
+  Carta B: menores 2x2 de la jacobiana de pi|X~: [-x, 2/t**3, 2/t**2]
+  [OK] carta B: un menor es 2/t^3 != 0 (t != 0 en X~): pi|X~ es inmersión en toda la carta B
+
+OK: Sing(X) = eje z; X~ lisa; punto pinzado = origen; pi^*X = X~ + 2E es SNC.
+[código de salida 0] simbolico/07_paraguas_whitney.py
+
+################ simbolico/08_contraste_singular.py ################
+
+========================================================================
+Contraste con Singular (opcional)
+========================================================================
+  Salida de Singular: ['ELIM', 'x^3-y^2', '1', 'FIN', 'A 1', 'B 1', 'A 3'] ...
+  [OK] Singular: el ideal de eliminación tiene un único generador
+  [OK] Singular: eliminación da x**3 - y**2  (sympy: x**3 - y**2)
+  [OK] Singular: dim k[x,y]/m^n = [1, 3, 6, 10, 15, 21, 28, 36]
+  [OK] Singular: dim B/m^n = [1, 3, 5, 7, 9, 11, 13, 15]
+[código de salida 0] simbolico/08_contraste_singular.py
+
+################ figuras/fig_cuspide_nodo.py ################
+  figura escrita: /home/user/BLOW-UP/codigo/figuras/figuras_salida/cuspide_nodo.pdf
+[código de salida 0] figuras/fig_cuspide_nodo.py
+
+################ figuras/fig_divisor_proyeccion.py ################
+  figura escrita: /home/user/BLOW-UP/codigo/figuras/figuras_salida/divisor_proyeccion.pdf
+[código de salida 0] figuras/fig_divisor_proyeccion.py
+
+################ figuras/fig_resolucion_tres_pasos.py ################
+  figura escrita: /home/user/BLOW-UP/codigo/figuras/figuras_salida/resolucion_cuspide_tres_pasos.pdf
+[código de salida 0] figuras/fig_resolucion_tres_pasos.py
+
+################ dinamica/00_verificacion_simbolica.py ################
+
+========================================================================
+Verificación simbólica del sistema (P,Q,R,S > 0)
+========================================================================
+
+(a) Equilibrios del eje y = 0 (jacobiana triangular):
+  [OK] (x0,0) con x0 = 0 es equilibrio
+  [OK] jacobiana triangular superior en y = 0
+  [OK] valores propios en x0 = 0: Q/2, -P*Q*S
+  [OK] (x0,0) con x0 = 1 es equilibrio
+  [OK] jacobiana triangular superior en y = 0
+  [OK] valores propios en x0 = 1: -Q - 1, -P*(Q*S + S - 1)
+  [OK] (x0,0) con x0 = -1 es equilibrio
+  [OK] jacobiana triangular superior en y = 0
+  [OK] valores propios en x0 = -1: 1 - Q, -P*(Q*S - S + 1)
+  [OK] (x0,0) con x0 = -Q es equilibrio
+  [OK] jacobiana triangular superior en y = 0
+  [OK] valores propios en x0 = -Q: Q*(Q - 1)*(Q + 1)/2, -P*Q
+  [OK] Q = 1: valores propios 0 y -P en (-1,0)
+  [OK] Q = 1, sobre el eje: x' = -e**2 + ... (silla-nodo, coef. -1)
+
+(b) Equilibrios fuera del eje:
+  [OK] h(x) = (x+Q)(S - Phi(x))
+  [OK] g(x, f(x)) = -h(x)
+  [OK] h tiene grado 5 y coeficiente principal -R
+  [OK] h(0) = Q*S
+  [OK] h(-Q) = Q
+  [OK] h(1) = S*(Q + 1) - 1
+  [OK] h(-1) = -S*(1 - Q) + 1
+  [OK] det J = -(P/2) f h'  módulo h(x)   (exacto, resto de la división = 0)
+  [OK] det J = (P/2) f (x+Q) Phi'  módulo h(x)
+  [OK] tr J = f'/2 - P R (x+Q) f  módulo h(x)
+
+(c) El infinito, carta W_1: (x,y) = (1/z, u/z), campo multiplicado por z^3:
+    z' = -Q*z**4/2 + Q*z**2/2 + u*z**4/2 - z**3/2 + z/2
+    u' = -P*Q*R*u**2*z**2 - P*Q*S*u*z**3 - P*R*u**2*z - P*S*u*z**2 + P*u*z**2 - Q*u*z**3/2 + Q*u*z/2 + u**2*z**3/2 - u*z**2/2 + u/2
+  [OK] z' = z/2 + (Q/2) z^2 - (1/2) z^3 + ...  (coincide con la monografía)
+  [OK] u' = u/2 + (Q/2) u z - PR u^2 z + ...  (coincide con la monografía)
+  [OK] parte lineal en (z,u) = (0,0): Id/2 (nodo hiperbólico, valor propio doble 1/2)
+  [OK] sobre z = 0: u' = u/2, luego (0,0) es el único equilibrio del infinito en W_1
+
+(c) El infinito, carta W_2: (x,y) = (v/z, 1/z), campo multiplicado por z^3:
+    v' = P*Q*R*v*z**2 + P*Q*S*v*z**3 + P*R*v**2*z + P*S*v**2*z**2 - P*v**2*z**2 - Q*v**3*z/2 + Q*v*z**3/2 - v**4/2 + v**2*z**2/2 - z**3/2
+    z' = P*Q*R*z**3 + P*Q*S*z**4 + P*R*v*z**2 + P*S*v*z**3 - P*v*z**3
+  [OK] v' coincide con la ecuación de la monografía
+  [OK] z' coincide con la ecuación de la monografía
+  [OK] el origen de W_2 es totalmente degenerado (J = 0)
+  [OK] C_3 = v Y_3 - z X_3 = z**4/2 = z^4/2
+
+    Tras z = v*zeta se divide por v^2:
+    v'    = P*Q*R*v*zeta**2 + P*Q*S*v**2*zeta**3 + P*R*v*zeta + P*S*v**2*zeta**2 - P*v**2*zeta**2 + Q*v**2*zeta**3/2 - Q*v**2*zeta/2 + v**2*zeta**2/2 - v**2/2 - v*zeta**3/2
+    zeta' = -Q*v*zeta**4/2 + Q*v*zeta**2/2 - v*zeta**3/2 + v*zeta/2 + zeta**4/2
+  [OK] la potencia común de v que se divide es v^2 (= v^(k-1), k = 3)
+  [OK] v' coincide con la monografía
+  [OK] zeta' coincide con la monografía
+  [OK] (v,zeta) = (0,0): parte lineal nula
+  [OK] parte cuadrática (-v^2/2 + PR v zeta, v zeta/2)
+  [OK] C_2 = v*zeta*(-P*R*zeta + v) = v zeta (v - PR zeta)
+
+    Segundos blow-ups (tabla de valores propios):
+    carta zeta = v eta, se divide por v^1
+      punto eta = 0: valores propios {-1/2: 1, 1: 1}
+      punto eta = 1/(P*R): valores propios {1/2: 1, -1: 1}
+    carta v = zeta xi, se divide por zeta^1
+      punto xi = 0: valores propios {0: 1, P*R: 1}
+      punto xi = P*R: valores propios {P*R/2: 1, -P*R: 1}
+  [OK] dirección zeta = 0: valores propios {-1/2, 1}  (silla)
+  [OK] dirección v = PR zeta: valores propios {-PR, PR/2}  (silla)
+  [OK] dirección v = 0: valores propios {PR, 0}  (semihiperbólico)
+    sobre xi = 0:  zeta' = zeta**3/2 + ...
+  [OK] zeta' = zeta^3/2 sobre xi = 0
+
+(d) Pliegues de f para Q = 2 (régimen lento-rápido):
+  [OK] ceros de f' (Q=2): [-1/2, -1/2 + sqrt(5)/2, -sqrt(5)/2 - 1/2] = {-1/2, (-1±√5)/2}
+  [OK] los tres ceros de f' son simples (discriminante no nulo)
+  [OK] f en los pliegues: -9/16, 1, 1
+  [OK] S_c(-1/2) = 9R/16 - 1/3
+  [OK] S_c((-1+√5)/2) = √5 - 2 - R
+  [OK] S_c((-1-√5)/2) = -2 - √5 - R < 0
+
+OK: verificación simbólica del sistema completada.
+[código de salida 0] dinamica/00_verificacion_simbolica.py
+
+################ dinamica/01_equilibrios_clasificacion.py ################
+==============================================================================
+EQUILIBRIOS EN EL PRIMER CUADRANTE (evidencia numérica, punto flotante)
+(* = raíz múltiple de h agrupada: el punto flotante no distingue una raíz doble de dos simples)
+semilla = 20261027;  tolerancia de no-hiperbolicidad = 0.0001;  residuo máx. = 1e-12
+==============================================================================
+
+--- Conjunto A: P = 1, Q = 0.3, R = 1.0, S = 0.33 ---
+    (+0.000000, +0.000000) [eje      ]  det=-1.485e-02 tr=+5.100e-02  lambda = +0.1500, -0.0990  ->  silla
+    (+1.000000, +0.000000) [eje      ]  det=-7.423e-01 tr=-7.290e-01  lambda = -1.3000, +0.5710  ->  silla
+    (+0.265748, +0.139729) [interior ]  det=+9.661e-03 tr=+2.674e-01  lambda = +0.2243, +0.0431  ->  nodo inestable
+    (+0.457008, +0.273703) [interior ]  det=-1.251e-02 tr=+1.149e-01  lambda = +0.1832, -0.0683  ->  silla
+    (+0.660418, +0.357636) [interior ]  det=+4.278e-02 tr=-3.054e-01  lambda = -0.1527+0.1395i, -0.1527-0.1395i  ->  foco estable
+    contraste fsolve multi-arranque: 5 equilibrios del primer cuadrante, coinciden con las raíces de h
+
+--- Conjunto B: P = 1, Q = 0.3, R = 1.0, S = 0.36 ---
+    (+0.000000, +0.000000) [eje      ]  det=-1.620e-02 tr=+4.200e-02  lambda = +0.1500, -0.1080  ->  silla
+    (+1.000000, +0.000000) [eje      ]  det=-6.916e-01 tr=-7.680e-01  lambda = -1.3000, +0.5320  ->  silla
+    (+0.734344, +0.349961) [interior ]  det=+1.052e-01 tr=-5.123e-01  lambda = -0.2562+0.1989i, -0.2562-0.1989i  ->  foco estable
+    contraste fsolve multi-arranque: 3 equilibrios del primer cuadrante, coinciden con las raíces de h
+
+--- Conjunto C: P = 1, Q = 0.3, R = 1.0, S = 1 ---
+    (+0.000000, +0.000000) [eje      ]  det=-4.500e-02 tr=-1.500e-01  lambda = +0.1500, -0.3000  ->  silla
+    (+1.000000, +0.000000) [eje      ]  det=+3.900e-01 tr=-1.600e+00  lambda = -1.3000, -0.3000  ->  nodo estable
+    contraste fsolve multi-arranque: 2 equilibrios del primer cuadrante, coinciden con las raíces de h
+
+--- Conjunto D: P = 1, Q = 0.3, R = 1.0, S = 1.5 ---
+    (+0.000000, +0.000000) [eje      ]  det=-6.750e-02 tr=-3.000e-01  lambda = +0.1500, -0.4500  ->  silla
+    (+1.000000, +0.000000) [eje      ]  det=+1.235e+00 tr=-2.250e+00  lambda = -1.3000, -0.9500  ->  nodo estable
+    contraste fsolve multi-arranque: 2 equilibrios del primer cuadrante, coinciden con las raíces de h
+
+--- Conjunto E: P = 1, Q = 0.5, R = 1.0, S = 0.666667 ---
+    (+0.000000, +0.000000) [eje      ]  det=-8.333e-02 tr=-8.333e-02  lambda = +0.2500, -0.3333  ->  silla
+    (+1.000000, +0.000000) [eje      ]  det=+0.000e+00 tr=-1.500e+00  lambda = -1.5000, +0.0000  ->  semihiperbólico (un valor propio 0)   <-- NO HIPERBÓLICO
+    contraste fsolve multi-arranque: 2 equilibrios del primer cuadrante, coinciden con las raíces de h
+
+--- Conjunto F: P = 0.664611, Q = 0.3, R = 1.0, S = 0.320364 ---
+    (+0.000000, +0.000000) [eje      ]  det=-9.581e-03 tr=+8.612e-02  lambda = +0.1500, -0.0639  ->  silla
+    (+1.000000, +0.000000) [eje      ]  det=-5.042e-01 tr=-9.122e-01  lambda = -1.3000, +0.3878  ->  silla
+    (+0.234719, +0.118594) [interior ]  det=+8.031e-03 tr=+2.919e-01  lambda = +0.2612, +0.0307  ->  nodo inestable
+    (+0.575077, +0.336810) [interior*]  det=-9.566e-11 tr=+9.050e-10  lambda = +0.0000, -0.0000  ->  nilpotente (ambos valores propios 0, J != 0)   <-- NO HIPERBÓLICO
+    contraste fsolve multi-arranque: 4 equilibrios del primer cuadrante, coinciden con las raíces de h
+
+==============================================================================
+COMPROBACIÓN NUMÉRICA DE AFIRMACIONES NUMÉRICAS DE LA MONOGRAFÍA (Q = 0.3, R = 1)
+==============================================================================
+  valores críticos de Phi (raíces reales de Phi'): [0.3204, 0.3388, 1.3962]
+  monografía afirma: ≈ 0.3204, 0.3388, 1.3962
+  (todas las raíces reales de Phi' dan los valores [0.3204, 0.3388, 1.3962])
+  S = 0.33: raíces reales de h = [0.266, 0.457, 0.66]  (3)
+  S = 0.36: raíces reales de h = [0.734]  (1)
+  S = 1.0: raíces reales de h = [1.072]  (1)
+  S = 1.5: raíces reales de h = [-1.064, -0.763, 1.183]  (3)
+  Bogdanov-Takens: x* = 0.5751, y* = 0.3368, P = 0.6646, S = 0.3204 (monografía: 0.5751, 0.3368, 0.6646, 0.3204)
+  J = [[0.1959, -0.5], [0.0767, -0.1959]],  det J = 2.72e-17,  tr J = -2.78e-17
+Fragmento LaTeX escrito en /home/user/BLOW-UP/codigo/dinamica/salida/tabla_equilibrios.tex
+OK: equilibrios, jacobianos y clasificación calculados; contrastes superados.
+[código de salida 0] dinamica/01_equilibrios_clasificacion.py
+
+################ dinamica/02_blowup_simulacion.py ################
+==============================================================================
+BLOW-UP DIRECCIONAL DEL ORIGEN: simulación numérica (evidencia, no demostración)
+solve_ivp: método=DOP853, rtol=1e-10, atol=1e-12; semilla=20261027
+parámetros: P=1.0, Q=0.3, R=1.0, S=0.33
+==============================================================================
+
+Equilibrios sobre E=\{r=0\}:  carta 1: v = 0 y v* = Q+2PQS = 0.498000;  carta 2: u* = 1/v* = 2.008032
+  carta 1: (r,v) = (0.0000, 0.0000)  valores propios ≈ [-0.249  0.15 ]
+  carta 1: (r,v) = (0.0000, 0.4980)  valores propios ≈ [-0.099  0.249]
+  carta 2: (r,u) = (0.0000, 2.0080)  valores propios ≈ [-0.099  0.249]
+  coinciden con las predicciones analíticas (carta 1): sillas hiperbólicas sobre E.
+
+Validación cruzada (misma parametrización del tiempo, k=1 no reescala):
+  IC 1: (x0,y0)=(0.1975,0.4756), T_comparación= 1.014  max|π(carta 1)-directa|=7.95e-11  max|π(carta 2)-directa|=6.98e-11
+  IC 2: (x0,y0)=(0.0164,0.0187), T_comparación= 2.194  max|π(carta 1)-directa|=1.58e-12  max|π(carta 2)-directa|=2.73e-12
+  IC 3: (x0,y0)=(0.0828,0.0329), T_comparación=20.000  max|π(carta 1)-directa|=2.51e-10  max|π(carta 2)-directa|=1.23e-09
+  IC 4: (x0,y0)=(0.0532,0.0489), T_comparación= 3.138  max|π(carta 1)-directa|=5.65e-11  max|π(carta 2)-directa|=5.92e-11
+  IC 5: (x0,y0)=(0.0632,0.0347), T_comparación= 9.653  max|π(carta 1)-directa|=1.75e-10  max|π(carta 2)-directa|=1.77e-10
+  IC 6: (x0,y0)=(0.1037,0.0683), T_comparación= 5.881  max|π(carta 1)-directa|=4.95e-11  max|π(carta 2)-directa|=6.32e-11
+  IC 7: (x0,y0)=(0.0397,0.0834), T_comparación= 1.074  max|π(carta 1)-directa|=8.39e-12  max|π(carta 2)-directa|=3.61e-13
+  IC 8: (x0,y0)=(0.1754,0.3597), T_comparación= 1.201  max|π(carta 1)-directa|=3.20e-11  max|π(carta 2)-directa|=2.87e-11
+  desviación máxima: carta 1 = 2.51e-10, carta 2 = 1.23e-09
+
+Figuras escritas en /home/user/BLOW-UP/codigo/figuras/figuras_salida: dinamica_antes.pdf, dinamica_despues.pdf
+OK: simulación en las cartas coherente con la dinámica original (evidencia numérica).
+[código de salida 0] dinamica/02_blowup_simulacion.py
+
+TODOS LOS SCRIPTS TERMINARON CON CÓDIGO 0

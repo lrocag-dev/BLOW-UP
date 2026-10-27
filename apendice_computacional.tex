@@ -1,0 +1,449 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\IfFileExists{lmodern.sty}{\usepackage{lmodern}}{}
+\IfFileExists{spanish.ldf}{\usepackage[spanish,es-noshorthands]{babel}}{}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{enumitem}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{tikz-cd}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{fancyvrb}
+\usepackage[colorlinks=true,linkcolor=blue!50!black,urlcolor=blue!50!black]{hyperref}
+\AtBeginDocument{%
+  \renewcommand{\contentsname}{Índice general}%
+  \renewcommand{\figurename}{Figura}%
+  \renewcommand{\tablename}{Tabla}%
+}
+\setlength{\parskip}{3pt}
+\linespread{1.04}
+\emergencystretch=3em
+
+% ---------- Macros (las mismas que en la monografía y las clases) ----------
+\newcommand{\Spec}{\operatorname{Spec}}
+\newcommand{\Proj}{\operatorname{Proj}}
+\newcommand{\Bl}{\operatorname{Bl}}
+\newcommand{\gr}{\operatorname{gr}}
+\newcommand{\Pic}{\operatorname{Pic}}
+\newcommand{\mult}{\operatorname{mult}}
+\newcommand{\Frac}{\operatorname{Frac}}
+\newcommand{\Sing}{\operatorname{Sing}}
+\newcommand{\A}{\mathbb{A}}
+\newcommand{\PP}{\mathbb{P}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\QQ}{\mathbb{Q}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\FF}{\mathbb{F}}
+\newcommand{\cO}{\mathcal{O}}
+\newcommand{\tr}{\operatorname{tr}}
+\newcommand{\m}{\mathfrak{m}}
+
+% ---------- Entornos ----------
+\theoremstyle{plain}
+\newtheorem{teorema}{Teorema}[section]
+\newtheorem{proposicion}[teorema]{Proposición}
+\theoremstyle{definition}
+\newtheorem{ejemplo}[teorema]{Ejemplo}
+\theoremstyle{remark}
+\newtheorem{observacion}[teorema]{Observación}
+\newtheorem*{convencion}{Convención}
+
+\DefineVerbatimEnvironment{codigo}{Verbatim}{fontsize=\footnotesize,frame=single,framesep=2mm,numbers=none}
+\newcommand{\fragmento}[3]{\VerbatimInput[fontsize=\footnotesize,frame=single,framesep=2mm,firstline=#2,lastline=#3]{#1}}
+\newcommand{\figuras}{codigo/figuras/figuras_salida}
+
+\title{\textbf{Apéndice computacional: experimentos con álgebra exacta,\\ figuras y dinámica numérica}\\[4pt]
+\large Verificación e ilustración de los ejemplos centrales de la monografía sobre blow-ups}
+\author{}
+\date{Octubre de 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}\noindent
+Este apéndice recoge los cálculos con ordenador que acompañan a la monografía \emph{Blow-ups, blow-downs y resolución de singularidades}: bases de Gröbner en aritmética exacta (sobre $\QQ$ y sobre cuerpos finitos $\FF_p$) para el núcleo de $t\mapsto(t^2,t^3)$, las potencias de $(x,y)$, la función de Hilbert, las cartas del blow-up, la resolución embebida de la cúspide, el invariante $\delta$ y el paraguas de Whitney; las figuras correspondientes; y la integración numérica de las cartas del blow-up direccional del sistema polinomial plano del último capítulo. \textbf{Los cálculos no sustituyen demostraciones:} son verificación e ilustración. El código es reproducible con un solo comando (\S\ref{sec:repro}).
+\end{abstract}
+
+\tableofcontents
+
+\section{Cómo usar este apéndice}\label{sec:repro}
+
+El documento es independiente: lleva el mismo preámbulo y las mismas macros que la monografía y las clases, y no necesita compilarse junto con ellas. Las referencias a la monografía (capítulos, ejemplos) son textuales. Los resultados se produjeron con el código del directorio \texttt{codigo/} del repositorio.
+
+\begin{convencion}
+$k$ es un cuerpo; todos los cálculos algebraicos se hicieron sobre $\QQ$ y, cuando se indica, sobre $\FF_2,\FF_3,\FF_5,\FF_7,\FF_{101}$, siempre en \emph{aritmética exacta} (sympy; contraste opcional con Singular). Los cálculos numéricos (\S\ref{sec:dinamica}) usan punto flotante y se declaran como tales. $\mathfrak m=(x,y)\subset k[x,y]$ y $B=k[x,y]/(y^2-x^3)$.
+\end{convencion}
+
+\paragraph{Reproducción.} Con Python $\ge3.11$ (probado con 3.13) basta, desde la raíz del repositorio,
+\begin{codigo}
+bash codigo/ejecutar_todo.sh
+\end{codigo}
+que crea un entorno virtual limpio (\texttt{codigo/.venv}), instala las versiones fijadas en \texttt{codigo/requirements.txt} (sympy 1.14.0, mpmath 1.3.0, numpy 2.5.4, scipy 1.18.1, matplotlib 3.11.2), ejecuta todos los scripts y escribe el registro completo en \texttt{codigo/\allowbreak registro\_ejecucion.txt}. Cada script termina con código $0$ \emph{solo} si pasan todas sus comprobaciones (\texttt{assert}/excepciones explícitas).
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{@{}l l p{6.0cm}@{}}
+\toprule
+Script & Sección & Qué comprueba o produce \\
+\midrule
+\texttt{simbolico/01\_nucleo\_cuspide.py} & \ref{sec:nucleo} & $\ker\varphi=(y^2-x^3)$ por eliminación \\
+\texttt{simbolico/02\_potencias\_maximal.py} & \ref{sec:potencias} & $I^n$, $\dim k[x,y]/I^n$, $\dim B/\m^n$ \\
+\texttt{simbolico/03\_funcion\_hilbert.py} & \ref{sec:hilbert} & función de Hilbert de $\gr_\m B$ \\
+\texttt{simbolico/04\_cartas\_blowup.py} & \ref{sec:cartas} & cartas, $\pi^*C=\tilde C+mE$ \\
+\texttt{simbolico/05\_resolucion\_cuspide.py} & \ref{sec:resolucion} & tres blow-ups, SNC, tabla de multiplicidades \\
+\texttt{simbolico/06\_delta.py} & \ref{sec:delta} & $\delta$ por fórmula y por $\dim\bar{\cO}/\cO$ \\
+\texttt{simbolico/07\_paraguas\_whitney.py} & \ref{sec:whitney} & carta del blow-up y punto pinzado \\
+\texttt{simbolico/08\_contraste\_singular.py} & \ref{sec:singular} & contraste opcional con Singular \\
+\texttt{figuras/fig\_*.py} & \ref{sec:figuras} & las figuras vectoriales (PDF) \\
+\texttt{dinamica/00\_verificacion\_simbolica.py} & \ref{sec:dinsimb} & identidades exactas del sistema dinámico \\
+\texttt{dinamica/01\_equilibrios\_clasificacion.py} & \ref{sec:equilibrios} & equilibrios y clasificación (numérico) \\
+\texttt{dinamica/02\_blowup\_simulacion.py} & \ref{sec:simulacion} & integración en las cartas, retratos de fase \\
+\bottomrule
+\end{tabular}
+\caption{Scripts del repositorio y sección donde se explican.}
+\end{table}
+
+% =====================================================================
+\section{Cálculo simbólico exacto}\label{sec:simbolico}
+
+\subsection{El núcleo de \texorpdfstring{$x\mapsto t^2$, $y\mapsto t^3$}{x a t al cuadrado, y a t al cubo}}\label{sec:nucleo}
+
+Sea $\varphi\colon k[x,y]\to k[t]$ con $x\mapsto t^2$, $y\mapsto t^3$. Por el teorema de eliminación, $\ker\varphi=(x-t^2,\,y-t^3)\cap k[x,y]$, y una base de Gröbner de $(x-t^2,y-t^3)$ para el orden lexicográfico $t>x>y$ contiene una base de la intersección con $k[x,y]$.
+
+\begin{ejemplo}
+Sobre $\QQ$ la base de Gröbner lex es $\{t^2-x,\ tx-y,\ ty-x^2,\ x^3-y^2\}$; el único elemento sin $t$ es $x^3-y^2=-(y^2-x^3)$. Por tanto $\ker\varphi=(y^2-x^3)$, y $B\cong k[t^2,t^3]\subset k[t]$ es el anillo de la cúspide. El resultado es el mismo sobre $\FF_2$, $\FF_3$, $\FF_5$, $\FF_7$ y $\FF_{101}$.
+\end{ejemplo}
+
+\fragmento{codigo/simbolico/01_nucleo_cuspide.py}{14}{16}
+
+\subsection{Potencias de \texorpdfstring{$I=(x,y)$}{I=(x,y)} y dimensiones de cocientes}\label{sec:potencias}
+
+$I^n$ está generado por los $n+1$ monomios $x^iy^{n-i}$ (el script lo comprueba: la base de Gröbner reducida de $I^n$ para \texttt{grevlex} es el propio conjunto de monomios). Las dimensiones se obtienen contando monomios estándar de una base de Gröbner de $I^n$ y de $(y^2-x^3)+\m^n$.
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{@{}r r r r r r r@{}}
+\toprule
+$n$ & $\#$gen.\ de $I^n$ & $\dim k[x,y]/I^n$ & esperado $\tfrac{n(n+1)}2$ & $\dim B/\m^n$ & esperado $2n-1$ \\
+\midrule
+1 & 2 & 1 & 1 & 1 & 1 \\
+2 & 3 & 3 & 3 & 3 & 3 \\
+3 & 4 & 6 & 6 & 5 & 5 \\
+4 & 5 & 10 & 10 & 7 & 7 \\
+5 & 6 & 15 & 15 & 9 & 9 \\
+6 & 7 & 21 & 21 & 11 & 11 \\
+7 & 8 & 28 & 28 & 13 & 13 \\
+8 & 9 & 36 & 36 & 15 & 15 \\
+\bottomrule
+\end{tabular}
+\caption{Esperado frente a calculado ($\QQ$, $\FF_2$, $\FF_3$ y $\FF_{101}$ dieron los mismos valores). No hubo ninguna discrepancia.}
+\end{table}
+
+\subsection{Función de Hilbert de \texorpdfstring{$\gr_\m B$}{gr B}}\label{sec:hilbert}
+
+Se define $H(j)=\dim\m^j/\m^{j+1}=\dim B/\m^{j+1}-\dim B/\m^j$. Como $\m^n$ es $\m$-primario, $\dim k[x,y]/(f,\m^n)$ coincide con la dimensión del cociente del anillo \emph{local}, así que el cálculo vale para el nodo, que no es local en el origen como anillo afín. Se verifica además $H=H(k[x,y]/(f_m))=(\min(j+1,m))_j$, como afirma el Capítulo de curvas planas de la monografía.
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{@{}l c l@{}}
+\toprule
+Curva & $m$ & $H(0),\dots,H(9)$ calculada \\
+\midrule
+cúspide $y^2=x^3$ & 2 & $1,2,2,2,2,2,2,2,2,2$ \\
+nodo $y^2=x^2(x+1)$ & 2 & $1,2,2,2,2,2,2,2,2,2$ \\
+$A_n$: $y^2=x^{n+1}$, $n=1,\dots,5$ & 2 & $1,2,2,2,2,2,2,2,2,2$ \\
+\midrule
+punto triple ordinario $xy(x+y)$ & 3 & $1,2,3,3,3,3,3,3,3,3$ \\
+$y^3=x^4$ & 3 & $1,2,3,3,3,3,3,3,3,3$ \\
+$y^3=x^5$ & 3 & $1,2,3,3,3,3,3,3,3,3$ \\
+\bottomrule
+\end{tabular}
+\caption{Función de Hilbert de $\gr_\m B$. Esperado: $1,2,2,2,\dots$ para $m=2$ y $1,2,3,3,\dots$ para $m=3$. Coincide en todos los casos (las tres últimas filas son contraste).}
+\end{table}
+
+\subsection{Cartas del blow-up del origen de \texorpdfstring{$\A^2$}{A2}}\label{sec:cartas}
+
+Las cartas son $y=xt$ (con $E=\{x=0\}$) y $x=ys$ (con $E=\{y=0\}$). Para cada curva $C=V(f)$ de multiplicidad $m=2$ el script comprueba $f(x,xt)=x^m\tilde f$, la fórmula $\tilde f=f_m(1,t)+xf_{m+1}(1,t)+\cdots$, que $x\nmid\tilde f$, que $\tilde C\cap E=V(f_m(1,t))$ y que $(\tilde C\cdot E)=m$ (sumando, si hace falta, la multiplicidad del punto $t=\infty$).
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{@{}l l l l l@{}}
+\toprule
+Curva & carta $y=xt$: $f(x,xt)$ & carta $x=ys$: $f(ys,y)$ & $\tilde C\cap E$ & $\Sing\tilde C$ (carta $y=xt$) \\
+\midrule
+$y^2=x^3$ & $x^2(t^2-x)$ & $y^2(1-s^3y)$ & $t=0$ (doble) & $\emptyset$ \\
+$y^2=x^2(x+1)$ & $x^2(t^2-x-1)$ & $y^2(1-s^2-s^3y)$ & $t=\pm1$ & $\emptyset$ \\
+$y^2=x^4$ & $x^2(t^2-x^2)$ & $y^2(1-s^4y^2)$ & $t=0$ (doble) & $\{(0,0)\}$, un nodo \\
+\bottomrule
+\end{tabular}
+\caption{Transformadas total y estricta. En los tres casos $\pi^*C=\tilde C+2E$ y $\operatorname{mult}=2$, y se confirma $(\tilde C\cdot E)=2$. La transformada estricta del tacnodo es $t^2=x^2$ (nodo), que exige un segundo blow-up y da $\delta=1+1=2$.}
+\end{table}
+
+\fragmento{codigo/simbolico/explosion.py}{28}{56}
+
+\subsection{Resolución embebida de la cúspide en tres blow-ups}\label{sec:resolucion}
+
+Se hace el blow-up, con aritmética exacta, de los puntos sucesivos: el origen; $q_1=\tilde C\cap E_1$ (donde $\tilde C$ y $E_1$ son tangentes: $t^2=x$ y $x=0$); y $q_2=\tilde C\cap E_1\cap E_2$ (tres ramas concurrentes). Las cartas usadas son $y=xt$, luego $x=tw$ y luego $w=ts$ (y, para recubrir la superficie final, las cartas complementarias, véase la docstring de \texttt{05\_resolucion\_cuspide.py}). En ellas:
+\begin{align*}
+\text{paso 1 (carta $(x,t)$):}&\quad F=x^2\,(t^2-x),\\
+\text{paso 2 (carta $(t,w)$):}&\quad F=t^3\,w^2\,(t-w),\\
+\text{paso 3 (carta $(t,s)$):}&\quad F=t^6\,s^2\,(1-s),\qquad\text{(carta $(w,\tau)$: } F=w^6\,\tau^3\,(\tau-1)).
+\end{align*}
+Los exponentes dan las multiplicidades de $E_1,E_2,E_3$ en $\pi^*C$.
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{@{}c l c c c l@{}}
+\toprule
+Paso & Centro & $\mult(\tilde C)$ & $\mult(\tilde E_1)$ & $\mult(\tilde E_2)$ & coef.\ de la nueva $E_i$ $=\sum\text{coef}\cdot\mult$ \\
+\midrule
+1 & $(0,0)\in\A^2$ & 2 & -- & -- & $2$ \\
+2 & $q_1=\tilde C\cap E_1$ & 1 & 1 & -- & $1\cdot1+2\cdot1=3$ \\
+3 & $q_2=\tilde C\cap E_1\cap E_2$ & 1 & 1 & 1 & $1+2+3=6$ \\
+\bottomrule
+\end{tabular}
+\caption{Tabla de multiplicidades de la resolución embebida de $y^2=x^3$. Sucesión de multiplicidades de $C$: $(2,1,1)$.}
+\end{table}
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{@{}p{6.2cm} p{4.3cm} p{4.3cm}@{}}
+\toprule
+Afirmación (monografía, Ejemplo de la resolución encajada) & Esperado & Calculado \\
+\midrule
+$\pi^*C$ & $\tilde C+2E_1+3E_2+6E_3$ & $\tilde C+2E_1+3E_2+6E_3$ \\
+autointersecciones $E_1^2,E_2^2,E_3^2$ & $-3,-2,-1$ & $-3,-2,-1$ \\
+$\pi^*C\cdot E_i$ & $0$ & $0$ ($i=1,2,3$) \\
+$\tilde C\cdot E_3,\ E_1\cdot E_3,\ E_2\cdot E_3$ & $1,1,1$ & $1,1,1$ \\
+divisor total $\tilde C+E_1+E_2+E_3$ & SNC & SNC (4 cartas) \\
+tras el paso 1 y tras el paso 2 & no SNC (tangencia; 3 ramas) & no SNC \\
+$\delta=\sum m_i(m_i-1)/2$ & $1$ & $1$ \\
+\bottomrule
+\end{tabular}
+\caption{Esperado frente a calculado. Sin discrepancias.}
+\end{table}
+
+\paragraph{Cómo se comprueba SNC.} Para cada carta (que es una copia de $\A^2$ con coordenadas $u,v$) y cada par/terna de componentes se usa que, sobre un cuerpo algebraicamente cerrado, un ideal $J\subset k[u,v]$ es $(1)$ si y solo si $V(J)=\emptyset$ (Nullstellensatz), y esto se decide con una base de Gröbner sobre $\QQ$: cada componente es lisa si $(g,g_u,g_v)=(1)$; dos componentes son transversales si $(g_i,g_j,\det\operatorname{Jac})=(1)$; no hay puntos triples si $(g_i,g_j,g_k)=(1)$.
+
+\begin{observacion}
+El paso 2 no basta: en la carta $(t,w)$ las curvas $\tilde C\colon t=w$, $E_1\colon w=0$ y $E_2\colon t=0$ son lisas y transversales dos a dos, pero pasan las tres por el origen, de modo que el divisor no es SNC (punto triple). El tercer blow-up las separa; el script comprueba también que en el paso 1 la tangencia $t^2=x$ frente a $x=0$ impide SNC.
+\end{observacion}
+
+\subsection{El invariante \texorpdfstring{$\delta$}{delta}}\label{sec:delta}
+
+Se calcula $\delta$ de dos maneras independientes:
+\begin{enumerate}[label=(\roman*)]
+\item por la fórmula $\delta=\frac{m(m-1)}2+\sum_q\delta_q$ (Teorema~de la fórmula de $\delta$ de la monografía), aplicada recursivamente a los puntos infinitamente próximos, con tangentes racionales;
+\item \emph{directamente}, como $\delta=\dim_{\QQ}(\bar{\cO}/\cO)$, con $\bar{\cO}=\prod_iQ[[t_i]]$ y las parametrizaciones exactas de las ramas. Si $N$ es tal que $t^N\bar{\cO}\subset\cO$ (conductor), entonces $\delta=\sum N_i-\dim(\text{imagen de }\cO\text{ en }\bar{\cO}/t^N\bar{\cO})$, y la imagen está generada por los monomios $x^iy^j$ con $i+j<N$ (pues $\operatorname{ord}_t x,\operatorname{ord}_t y\ge1$). El rango se calcula en $\QQ$ exacto con matrices de racionales; para el nodo se usa $y=\pm x\sqrt{1+x}$ con los coeficientes binomiales $\binom{1/2}{k}$ exactos. Se comprueba que el resultado es el mismo para $N=12$ y $N=16$.
+\end{enumerate}
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{@{}l l c c c@{}}
+\toprule
+Curva & multiplicidades $\ge2$ & $\delta$ (fórmula) & $\delta$ ($\dim\bar{\cO}/\cO$) & esperado \\
+\midrule
+$A_1$: $y^2=x^2$ (nodo) & $(2)$ & 1 & 1 & 1 \\
+$A_2$: $y^2=x^3$ (cúspide) & $(2)$ & 1 & 1 & 1 \\
+$A_3$: $y^2=x^4$ (tacnodo) & $(2,2)$ & 2 & 2 & 2 \\
+$A_4$: $y^2=x^5$ & $(2,2)$ & 2 & 2 & 2 \\
+$A_5$: $y^2=x^6$ & $(2,2,2)$ & 3 & 3 & 3 \\
+nodo $y^2=x^2(x+1)$ & $(2)$ & 1 & 1 & 1 \\
+punto triple ordinario $xy(x+y)$ & $(3)$ & 3 & 3 & 3 \\
+$y^3=x^4$ (tipo $E_6$) & $(3)$ & 3 & 3 & 3 \\
+$y^3=x^5$ (tipo $E_8$) & $(3,2)$ & 4 & 4 & 4 \\
+\bottomrule
+\end{tabular}
+\caption{$\delta$ por fórmula frente a cálculo directo. Para $A_n$, $\delta=\lceil n/2\rceil$. En la columna \emph{esperado} figuran los valores de la monografía (ejemplos) y, para $A_n$, $\lceil n/2\rceil$, que es el valor clásico.}
+\end{table}
+
+\fragmento{codigo/simbolico/06_delta.py}{100}{125}
+
+\subsection{El paraguas de Whitney}\label{sec:whitney}
+
+Sea $X=V(x^2-y^2z)\subset\A^3$. Con bases de Gröbner: el ideal jacobiano $(f,f_x,f_y,f_z)$ tiene base de Gröbner $\{y^2,\,yz,\,x\}$, que contiene $x$ e $y^2$ y está contenido en $(x,y)$, luego su radical es $(x,y)$ y $\Sing X$ es el eje $z$. Se hace el blow-up de $L=V(x,y)$ (centro liso, $c=2$):
+\begin{itemize}
+\item carta $x=sy$: $f=-y^2(z-s^2)$, estricta $s^2=z$;
+\item carta $y=tx$: $f=-x^2(t^2z-1)$, estricta $t^2z=1$.
+\end{itemize}
+
+\begin{proposicion}[calculada]
+La transformada estricta $\tilde X$ es \emph{lisa} en ambas cartas, luego en todo $\Bl_L\A^3$ (las dos cartas lo recubren). El divisor total $\pi^*X=\tilde X+2E$ es de cruces normales simples ($\tilde X$ y $E$ se cortan transversalmente). El morfismo $\tilde X\to X$ deja de ser una inmersión en exactamente un punto: el \emph{punto pinzado}, $(s,y)=(0,0)$ en la carta $x=sy$, con imagen el origen.
+\end{proposicion}
+
+En efecto, en la carta $x=sy$ la superficie $\tilde X$ está parametrizada por $(s,y)\mapsto(sy,\,y,\,s^2)$, con matriz jacobiana de menores $2\times2$ iguales a $y,\ -2s^2,\ -2s$, que se anulan a la vez solo en $(0,0)$. En la carta $y=tx$, la parametrización $(t,x)\mapsto(x,tx,1/t^2)$ tiene un menor igual a $2/t^3\ne0$ (en $\tilde X$, $t\ne0$): es inmersión en todo punto.
+
+\begin{observacion}[Sobre ``la singularidad restante'']
+Tras el blow-up de $L$ \emph{no queda ninguna singularidad}: $\tilde X$ es lisa, de acuerdo con el Ejemplo del paraguas de Whitney de la monografía (la transformada estricta es la normalización). Lo que sí se localiza es el punto donde el paraguas deja de ser el cruce transversal de dos hojas, el origen, que es el punto de ramificación de $E\cap\tilde X\to L$, $(s,0,s^2)\mapsto(0,0,s^2)$ (revestimiento doble $s=\pm\sqrt z$).
+\end{observacion}
+
+\subsection{Contraste con Singular}\label{sec:singular}
+
+El script \texttt{08\_contraste\_singular.py} repite, si Singular está instalado (aquí, Singular 4.3.2), la eliminación y las dimensiones de las secciones~\ref{sec:nucleo} y~\ref{sec:potencias}: obtiene el generador $x^3-y^2$, $\dim k[x,y]/\m^n=1,3,6,10,15,21,28,36$ y $\dim B/\m^n=1,3,5,7,9,11,13,15$, idénticos a los de sympy. Si Singular no está instalado el script se omite (código de salida $0$): no es obligatorio.
+
+% =====================================================================
+\section{Figuras}\label{sec:figuras}
+
+Las figuras se generan con \texttt{codigo/figuras/fig\_*.py} (matplotlib con estilo por defecto, PDF vectorial con fuentes incrustadas, etiquetas en español) y se escriben en \texttt{codigo/figuras/figuras\_salida/}.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.86\textwidth]{\figuras/cuspide_nodo.pdf}
+\caption{Arriba: la cúspide $y^2=x^3$ y su transformada estricta $t^2=x$ en la carta $(x,t)$, $y=xt$, tangente a $E=\{x=0\}$. Abajo: el nodo $y^2=x^2(x+1)$ y su transformada estricta $t^2=x+1$, que corta a $E$ en $t=\pm1$ (las dos tangentes del nodo).}
+\label{fig:cuspide-nodo}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\textwidth]{\figuras/divisor_proyeccion.pdf}
+\caption{El divisor excepcional y la proyección $\pi\colon(x,t)\mapsto(x,xt)$. Cada recta $t=c$ de la carta va a la recta $y=cx$; $E=\{x=0\}$ se contrae al origen y $\tilde C$ va a la cúspide $C$.}
+\label{fig:proyeccion}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\textwidth]{\figuras/resolucion_cuspide_tres_pasos.pdf}
+\caption{Resolución de $y^2=x^3$ en tres pasos, en las cartas de la Sección~\ref{sec:resolucion}. Paso 1: $\tilde C$ y $E_1$ tangentes. Paso 2: tres rectas concurrentes. Paso 3 (carta $w=ts$): $\tilde C$, $E_1$ y $E_3$ se cortan transversalmente y sin puntos triples; $E_2$ está en la carta complementaria $(w,\tau)$.}
+\label{fig:tres-pasos}
+\end{figure}
+
+% =====================================================================
+\section{Aplicación a sistemas dinámicos: evidencia numérica}\label{sec:dinamica}
+
+\begin{observacion}[Estatuto de esta sección]
+Salvo la Sección~\ref{sec:dinsimb}, que es exacta, todo lo de esta sección es \emph{evidencia numérica en punto flotante}: no demuestra nada. En particular, no decide igualdades (``$\det J=0$'') ni raíces múltiples; se explica en \S\ref{sec:limites}.
+\end{observacion}
+
+El sistema es el del Capítulo de aplicación a sistemas dinámicos de la monografía, con $P,Q,R,S>0$:
+\begin{equation}\label{eq:S}
+\dot x=\tfrac12\big(f(x)-y\big),\qquad \dot y=P\,y\,g(x,y),\qquad f(x)=(1-x^2)\,x\,(x+Q),\quad g=x-(S+Ry)(x+Q).
+\end{equation}
+
+\subsection{Verificación simbólica exacta}\label{sec:dinsimb}
+
+El script \texttt{dinamica/00\_verificacion\_simbolica.py} comprueba en sympy, con $P,Q,R,S$ simbólicos positivos, las afirmaciones algebraicas del capítulo:
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{@{}p{9.2cm} p{5.4cm}@{}}
+\toprule
+Afirmación de la monografía & Resultado exacto \\
+\midrule
+valores propios en $(0,0),(1,0),(-1,0),(-Q,0)$ (tabla de equilibrios del eje) & coinciden \\
+$Q=1$: valores propios $0,-P$ en $(-1,0)$; $\dot x=-(x+1)^2+\cdots$ sobre el eje & coinciden \\
+$h=(x+Q)(S-\Phi)$; $g(x,f(x))=-h(x)$; $\deg h=5$, coef.\ principal $-R$ & coinciden \\
+$h(0)=SQ,\ h(-Q)=Q,\ h(1)=S(1+Q)-1,\ h(-1)=1-S(1-Q)$ & coinciden \\
+$\det J=\tfrac P2f(x+Q)\Phi'$ y $\tr J=\tfrac12f'-PR(x+Q)f$ en los equilibrios (módulo $h$) & coinciden \\
+carta $W_1$ del infinito: $\dot z=\tfrac z2+\tfrac Q2z^2-\tfrac12z^3+\cdots$, $\dot u=\tfrac u2+\tfrac Q2uz-PRu^2z+\cdots$ & coinciden; parte lineal $\tfrac12\mathrm{Id}$ \\
+carta $W_2$: ecuaciones de $\dot v,\dot z$ y $J=0$ en el origen & coinciden \\
+$C_3=\tfrac12z^4$ y primer blow-up $z=v\zeta$ (se divide por $v^2$) & coinciden \\
+$C_2=v\zeta(v-PR\zeta)$ & coincide \\
+segundos blow-ups: valores propios $\{-\tfrac12,1\}$, $\{-PR,\tfrac{PR}2\}$, $\{PR,0\}$; $\dot\zeta=\tfrac12\zeta^3$ sobre $\xi=0$ & coinciden \\
+$Q=2$: pliegues $x=-\tfrac12,\tfrac{-1\pm\sqrt5}2$, $f=-\tfrac9{16},1,1$ y las tres fórmulas de $S_c$ & coinciden \\
+\bottomrule
+\end{tabular}
+\caption{Verificación exacta del Capítulo de dinámica. Ninguna discrepancia. Nota: en la carta $\zeta=v\eta$ el punto de la dirección $v=PR\zeta$ es $\eta=1/(PR)$, con valores propios $\{\tfrac12,-1\}$; difieren de $\{\tfrac{PR}2,-PR\}$ de la carta $v=\zeta\xi$ por el reescalado temporal distinto (se divide por $v$ y por $\zeta$ respectivamente), que no cambia el tipo (silla).}
+\end{table}
+
+\subsection{Equilibrios del primer cuadrante y clasificación}\label{sec:equilibrios}
+
+Los equilibrios con $y\ne0$ son $(x_*,f(x_*))$ con $h(x_*)=0$, donde $h=R(x+Q)f(x)-(1-S)x+SQ$ tiene grado $5$. El script \texttt{01\_equilibrios\_clasificacion.py} obtiene las raíces reales de $h$ con \texttt{numpy.roots}, las refina con Newton y retiene las del primer cuadrante ($x\ge0,\ y\ge0$; los equilibrios del eje son $(0,0)$ y $(1,0)$). Como contraste independiente repite la búsqueda con \texttt{scipy.optimize.fsolve} desde 400 arranques aleatorios (semilla fija) y comprueba que ambos métodos dan los mismos equilibrios. Para cada uno calcula la matriz jacobiana, sus valores propios y el tipo. Se marca como \emph{no hiperbólico} ($\dagger$) un equilibrio con algún $|\operatorname{Re}\lambda|\le10^{-4}$ (tolerancia explícita, ver \S\ref{sec:tolerancias}).
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{@{}l l l l@{}}
+\toprule
+ & Equilibrio $(x,y)$ & Valores propios & Tipo \\
+\midrule
+\input{codigo/dinamica/salida/tabla_equilibrios.tex} \\
+\bottomrule
+\end{tabular}
+\caption{Equilibrios del primer cuadrante (generada por el script; $\dagger$ = no hiperbólico). Conjuntos: A, B, C, D con $Q=0.3$, $R=1$, $P=1$ y $S=0.33,\,0.36,\,1,\,1.5$; E con $Q=0.5$ y $S=2/3$, de modo que $S(1+Q)=1$ y $(1,0)$ es semihiperbólico; F es el candidato a Bogdanov--Takens (el equilibrio interior es nilpotente).}
+\label{tab:equilibrios}
+\end{table}
+
+\paragraph{Contraste con las afirmaciones numéricas de la monografía} ($Q=0.3$, $R=1$). El script comprueba, con tolerancia $6\cdot10^{-4}$: los valores críticos de $\Phi=x/(x+Q)-Rf$ son $0.3204,\ 0.3388,\ 1.3962$; para $S=0.33$ hay tres raíces reales de $h$ ($0.266,\ 0.457,\ 0.660$); para $S=0.36$ y $S=1$ una; para $S=1.5$ tres; y el candidato a Bogdanov--Takens resolviendo $\det J=\tr J=0$ da $x_*=0.5751$, $y_*=0.3368$, $P=0.6646$, $S=0.3204$, con $J=\begin{psmallmatrix}0.1959&-0.5\\0.0767&-0.1959\end{psmallmatrix}$. \emph{Todo coincide con lo afirmado.} Una precisión que no es una discrepancia: para $S=1$ y $S=1.5$ las raíces reales de $h$ tienen $x>1$ o $x<0$, de modo que los equilibrios correspondientes tienen $y<0$ o $x<0$ y \emph{no están en el primer cuadrante} (conjuntos C y D de la tabla).
+
+\paragraph{Un caso mal condicionado.} En el conjunto F ($S$ es el valor crítico $0.3204\ldots$ de $\Phi$) $h$ tiene una raíz doble; en punto flotante \texttt{numpy.roots} devuelve dos raíces reales vecinas ($\approx10^{-8}$) y los valores propios salen $\sim10^{-5}$, no $0$. Los scripts agrupan las raíces a distancia $<10^{-5}$ y marcan el resultado como no hiperbólico \emph{por tolerancia}: es una decisión numérica, no una prueba de que $\det J=0$ (que sí se tiene exactamente en la construcción, pero no se puede \emph{decidir} en flotantes). Véase \S\ref{sec:limites}.
+
+\subsection{Blow-up direccional del origen y simulación}\label{sec:simulacion}
+
+El origen es un equilibrio hiperbólico (silla, valores propios $Q/2$ y $-PQS$), así que \emph{no necesita} blow-up; se hace aquí para ilustrar la construcción y validar la integración numérica en las cartas. Con $k=1$ (la parte lineal no es nula) el campo en la carta ya es regular, sin dividir por potencias de $r$ (Proposición del blow-up direccional de un campo, con $x^{k-1}=1$):
+\begin{align*}
+\text{carta 1: } x=r,\ y=rv:&\quad \dot r=\tfrac12\,r\,a,\quad \dot v=v\big[P\,g(r,rv)-\tfrac12a\big],\quad a=(1-r^2)(r+Q)-v,\\
+\text{carta 2: } y=r,\ x=ru:&\quad \dot r=P\,r\,g(ru,r),\quad \dot u=\tfrac12\big[u(1-r^2u^2)(ru+Q)-1\big]-uP\,g(ru,r).
+\end{align*}
+Ambas dejan invariante $E=\{r=0\}$. Sobre $E$ los equilibrios son, en la carta 1, $v=0$ (la dirección del eje $x$, valor propio radial $Q/2$) y $v_*=Q+2PQS$ (la dirección estable de la silla, valor propio radial $-PQS$); en la carta 2, $u_*=1/v_*$. Para $P=1$, $Q=0.3$, $R=1$, $S=0.33$ (conjunto A): $v_*=0.498$, $u_*=2.008032$ y los valores propios son $\{0.150,-0.249\}$ en $(0,0)$ y $\{-0.099,\ 0.249\}$ en $(0,v_*)$, coincidentes con las predicciones analíticas $\{Q/2,-(PQS+Q/2)\}$ y $\{-PQS,\ Q/2+PQS\}$. Son sillas hiperbólicas: el blow-up separa las dos direcciones propias de la silla del origen.
+
+\fragmento{codigo/dinamica/sistema.py}{53}{71}
+
+\subsubsection{Tolerancias, método y semillas}\label{sec:tolerancias}
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{@{}p{5.2cm} p{10.0cm}@{}}
+\toprule
+Magnitud & Valor \\
+\midrule
+integrador & \texttt{scipy.integrate.solve\_ivp}, método \texttt{DOP853} (Runge--Kutta explícito de orden 8) \\
+tolerancias del integrador & \texttt{rtol} $=10^{-10}$, \texttt{atol} $=10^{-12}$ \\
+semilla (\texttt{numpy.random.default\_rng}) & $20261027$ (retrato ``antes'' y ``después'': semilla y semilla $+1$) \\
+no hiperbólico & $\min|\operatorname{Re}\lambda|\le10^{-4}$ \\
+raíces de $h$ agrupadas (raíz múltiple) & distancia $<10^{-5}$ \\
+raíz real (parte imaginaria) & $|\operatorname{Im}|\le10^{-9}$ \\
+residuo admitido en un equilibrio & $\max|\dot x|,|\dot y|<10^{-12}$ (salvo raíces múltiples: $10^{-7}$) \\
+parámetros de las simulaciones & $P=1,\ Q=0.3,\ R=1,\ S=0.33$ (conjunto A) \\
+\bottomrule
+\end{tabular}
+\caption{Tolerancias y semillas (definidas en \texttt{codigo/dinamica/sistema.py} y en los scripts).}
+\end{table}
+
+\fragmento{codigo/dinamica/02_blowup_simulacion.py}{33}{42}
+
+\subsubsection{Validación cruzada}
+
+Para ocho condiciones iniciales aleatorias (semilla $20261027$), se integra el sistema original y las cartas 1 y 2 sobre el mismo intervalo de tiempo (el blow-up con $k=1$ no reescala el tiempo), hasta el primer instante en que $x\le10^{-3}$ o $y\le10^{-5}$ (momento en que una de las cartas deja de ser útil), y se compara la imagen por $\pi$ con la órbita original. La desviación máxima es $2.51\cdot10^{-10}$ (carta 1) y $1.23\cdot10^{-9}$ (carta 2), muy por debajo del umbral de comprobación $10^{-6}$. Esto es coherencia numérica del cambio de variables (una comprobación de que las ecuaciones de las cartas están bien escritas), no una prueba.
+
+\subsubsection{Retratos de fase antes y después del blow-up}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\textwidth]{\figuras/dinamica_antes.pdf}
+\caption{Antes del blow-up (conjunto A). (a) Primer cuadrante: órbitas (adelante y atrás en el tiempo) desde 40 condiciones iniciales aleatorias (semilla fija) y 3 sobre el eje $y=0$, las curvas $\dot x=0$ ($y=f(x)$, trazos) y $g=0$ (puntos) y los cinco equilibrios (silla en $(0,0)$ y $(1,0)$, nodo inestable, silla y foco estable interiores). (b) Entorno del origen: todas las órbitas se comprimen contra el origen, donde no se distinguen las direcciones.}
+\label{fig:antes}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\textwidth]{\figuras/dinamica_despues.pdf}
+\caption{Después del blow-up. (a) Carta 1 ($x=r$, $y=rv$): $E=\{r=0\}$ (trazo grueso) contiene los equilibrios $v=0$ y $v_*=0.498$, ambos sillas. (b) Carta 2 ($y=r$, $x=ru$): equilibrio $u_*=2.008$ sobre $E$. (c) Imagen por $\pi$ de órbitas de la carta 1 (trazos) sobre las órbitas directas del sistema original (trazo ancho): coinciden.}
+\label{fig:despues}
+\end{figure}
+
+\subsection{Lo que no se hizo}
+
+Los dos casos que \emph{sí necesitan} blow-up en la monografía son el equilibrio degenerado del infinito en la carta $W_2$ (verificado simbólicamente en la Sección~\ref{sec:dinsimb}) y el equilibrio nilpotente del candidato a Bogdanov--Takens, que requiere un blow-up \emph{con pesos} $(1,2)$; no se simularon. Tampoco se integró el régimen lento--rápido ($P\to0$, blow-up de Krupa--Szmolyan). Quedan como mejora futura.
+
+% =====================================================================
+\section{Alcance y límites}\label{sec:limites}
+
+\begin{itemize}
+\item Los cálculos en punto flotante \textbf{no deciden igualdades ni singularidad}. Que $\det J$ salga $10^{-17}$ en lugar de $0$, que \texttt{numpy.roots} devuelva dos raíces reales vecinas en lugar de una doble, o que unos valores propios salgan $\sim10^{-5}$, es evidencia compatible con ---no demostración de--- no hiperbolicidad. Por eso las tolerancias (Tabla de la \S\ref{sec:tolerancias}) son explícitas y los casos mal condicionados se marcan.
+\item \textbf{Todo lo algebraico} (Secciones~\ref{sec:simbolico} y~\ref{sec:dinsimb}) \textbf{se hizo en aritmética exacta}, sobre $\QQ$ y cuerpos finitos $\FF_p$, con bases de Gröbner (sympy; contraste opcional con Singular); nunca con flotantes. Las comprobaciones de SNC, de lisura y de transversalidad se reducen a que ciertos ideales sean $(1)$.
+\item Los cálculos verifican \emph{ejemplos}; no prueban los teoremas generales (fórmula de $\delta$, resolución encajada, teorema del centro liso, Hironaka). Un resultado que coincide en los ejemplos probados es evidencia, no demostración.
+\item \textbf{Ningún resultado numérico reemplaza una demostración.} Las secciones \S\ref{sec:equilibrios} y \S\ref{sec:simulacion} ilustran el comportamiento; las pruebas están en la monografía.
+\item La función de Hilbert, $\delta$ directo, etc., están limitados a las curvas y a los rangos de $n$ que se listan. $\delta$ directo requiere $t^N\bar{\cO}\subset\cO$, que se verifica indirectamente por la estabilidad en $N=12,16$, no demostrándolo; la fórmula recursiva requiere tangentes racionales y levanta \texttt{NotImplementedError} si no lo son.
+\end{itemize}
+
+\end{document}
