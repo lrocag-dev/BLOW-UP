@@ -1,0 +1,7 @@
+# Versiones fijadas (probadas con Python 3.13).
+# Instalación: python3 -m venv .venv && .venv/bin/pip install -r codigo/requirements.txt
+sympy==1.14.0
+mpmath==1.3.0
+numpy==2.5.4
+scipy==1.18.1
+matplotlib==3.11.2
